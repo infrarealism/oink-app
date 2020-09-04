@@ -8,56 +8,56 @@ final class Menu: NSMenu {
     }
 
     private var app: NSMenuItem {
-        menu(.key("App"), items: [
-        .init(title: .key("About"), action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: ""),
+        menu("Oink", items: [
+        .init(title: "About", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: ""),
         .separator(),
-        .init(title: .key("Hide"), action: #selector(NSApplication.hide), keyEquivalent: "h"),
+        .init(title: "Hide", action: #selector(NSApplication.hide), keyEquivalent: "h"),
         {
             $0.keyEquivalentModifierMask = [.option, .command]
             return $0
-        } (NSMenuItem(title: .key("Hide.others"), action: #selector(NSApplication.hideOtherApplications), keyEquivalent: "h")),
-        .init(title: .key("Show.all"), action: #selector(NSApplication.unhideAllApplications), keyEquivalent: ""),
+        } (NSMenuItem(title: "Hide others", action: #selector(NSApplication.hideOtherApplications), keyEquivalent: "h")),
+        .init(title: "Show all", action: #selector(NSApplication.unhideAllApplications), keyEquivalent: ""),
         .separator(),
-        .init(title: .key("Quit"), action: #selector(NSApplication.terminate), keyEquivalent: "q")])
+        .init(title: "Quit", action: #selector(NSApplication.terminate), keyEquivalent: "q")])
     }
     
     private var edit: NSMenuItem {
-        menu(.key("Edit"), items: [
+        menu("Edit", items: [
         { $0.keyEquivalentModifierMask = [.option, .command]
             $0.keyEquivalentModifierMask = [.command]
             return $0
-        } (NSMenuItem(title: .key("Undo"), action: Selector(("undo:")), keyEquivalent: "z")),
+        } (NSMenuItem(title: "Undo", action: Selector(("undo:")), keyEquivalent: "z")),
         { $0.keyEquivalentModifierMask = [.command, .shift]
             return $0
-        } (NSMenuItem(title: .key("Redo"), action: Selector(("redo:")), keyEquivalent: "z")),
+        } (NSMenuItem(title: "Redo", action: Selector(("redo:")), keyEquivalent: "z")),
         .separator(),
         { $0.keyEquivalentModifierMask = [.command]
             return $0
-        } (NSMenuItem(title: .key("Cut"), action: #selector(NSText.cut), keyEquivalent: "x")),
+        } (NSMenuItem(title: "Cut", action: #selector(NSText.cut), keyEquivalent: "x")),
         { $0.keyEquivalentModifierMask = [.command]
             return $0
-        } (NSMenuItem(title: .key("Copy"), action: #selector(NSText.copy(_:)), keyEquivalent: "c")),
+        } (NSMenuItem(title: "Copy", action: #selector(NSText.copy(_:)), keyEquivalent: "c")),
         { $0.keyEquivalentModifierMask = [.command]
             return $0
-        } (NSMenuItem(title: .key("Paste"), action: #selector(NSText.paste), keyEquivalent: "v")),
-        .init(title: .key("Delete"), action: #selector(NSText.delete), keyEquivalent: ""),
+        } (NSMenuItem(title: "Paste", action: #selector(NSText.paste), keyEquivalent: "v")),
+        .init(title: "Delete", action: #selector(NSText.delete), keyEquivalent: ""),
         { $0.keyEquivalentModifierMask = [.command]
             return $0
-        } (NSMenuItem(title: .key("Select.all"), action: #selector(NSText.selectAll), keyEquivalent: "a"))])
+        } (NSMenuItem(title: "Select.all", action: #selector(NSText.selectAll), keyEquivalent: "a"))])
     }
     
     private var window: NSMenuItem {
-        menu(.key("Window"), items: [
-        .init(title: .key("Minimize"), action: #selector(NSWindow.miniaturize), keyEquivalent: "m"),
-        .init(title: .key("Zoom"), action: #selector(NSWindow.zoom), keyEquivalent: "p"),
+        menu("Window", items: [
+        .init(title: "Minimize", action: #selector(NSWindow.miniaturize), keyEquivalent: "m"),
+        .init(title: "Zoom", action: #selector(NSWindow.zoom), keyEquivalent: "p"),
         .separator(),
-        .init(title: .key("Bring.all"), action: #selector(NSApplication.arrangeInFront), keyEquivalent: ""),
+        .init(title: "Bring.all", action: #selector(NSApplication.arrangeInFront), keyEquivalent: ""),
         .separator(),
-        .init(title: .key("Close"), action: #selector(NSWindow.close), keyEquivalent: "w")])
+        .init(title: "Close", action: #selector(NSWindow.close), keyEquivalent: "w")])
     }
     
     private var help: NSMenuItem {
-        menu(.key("Help"), items: [])
+        menu("Help", items: [])
     }
     
     private func menu(_ name: String, items: [NSMenuItem]) -> NSMenuItem {
