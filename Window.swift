@@ -20,10 +20,10 @@ final class Window: NSWindow {
         setFrameAutosaveName("Window")
         
         session.bookmark.sink {
-            if $0 == nil {
-                self.launch()
+            if let bookmark = $0 {
+                self.main(bookmark)
             } else {
-                self.main()
+                self.launch()
             }
         }.store(in: &subs)
         session.load()
@@ -46,10 +46,10 @@ final class Window: NSWindow {
         launch.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
     }
     
-    private func main() {
+    private func main(_ bookmark: Bookmark) {
         contentView!.subviews.forEach { $0.removeFromSuperview() }
         
-        let main = Main(session: session)
+        let main = Main(bookmark: bookmark)
         contentView!.addSubview(main)
         
         main.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
