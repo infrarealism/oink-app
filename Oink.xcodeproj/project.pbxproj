@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CE342DB62502727F0060C9E5 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE342DB52502727F0060C9E5 /* App.swift */; };
 		CE342DB8250272940060C9E5 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE342DB7250272940060C9E5 /* Label.swift */; };
+		CE342DBA250277FE0060C9E5 /* Main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE342DB9250277FE0060C9E5 /* Main.swift */; };
 		CE735F14250253D90034D80E /* Control.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F13250253D90034D80E /* Control.swift */; };
 		CE735F16250254130034D80E /* Control.Blob.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F15250254130034D80E /* Control.Blob.swift */; };
 		CE735F182502552A0034D80E /* Launch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F172502552A0034D80E /* Launch.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		CE342DB52502727F0060C9E5 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		CE342DB7250272940060C9E5 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		CE342DB9250277FE0060C9E5 /* Main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Main.swift; sourceTree = "<group>"; };
 		CE735F13250253D90034D80E /* Control.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.swift; sourceTree = "<group>"; };
 		CE735F15250254130034D80E /* Control.Blob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.Blob.swift; sourceTree = "<group>"; };
 		CE735F172502552A0034D80E /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				CE735F13250253D90034D80E /* Control.swift */,
 				CE342DB7250272940060C9E5 /* Label.swift */,
 				CE735F172502552A0034D80E /* Launch.swift */,
+				CE342DB9250277FE0060C9E5 /* Main.swift */,
 				CEEC54A02502418000B1CB99 /* Menu.swift */,
 				CE735F19250257070034D80E /* Session.swift */,
 				CEEC549E2502417900B1CB99 /* Window.swift */,
@@ -150,6 +153,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE342DBA250277FE0060C9E5 /* Main.swift in Sources */,
 				CEEC54A12502418000B1CB99 /* Menu.swift in Sources */,
 				CE735F14250253D90034D80E /* Control.swift in Sources */,
 				CE735F16250254130034D80E /* Control.Blob.swift in Sources */,

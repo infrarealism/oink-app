@@ -15,7 +15,8 @@ final class Session {
     }
     
     func update(_ bookmark: Bookmark) {
-        store.update(bookmark)
+        store.remove(bookmark)
+        store.add(bookmark)
         self.bookmark.send(bookmark)
     }
 }

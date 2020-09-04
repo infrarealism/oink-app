@@ -23,7 +23,7 @@ final class Window: NSWindow {
             if $0 == nil {
                 self.launch()
             } else {
-                
+                self.main()
             }
         }.store(in: &subs)
         session.load()
@@ -44,5 +44,17 @@ final class Window: NSWindow {
         launch.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
         launch.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
         launch.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
+    }
+    
+    private func main() {
+        contentView!.subviews.forEach { $0.removeFromSuperview() }
+        
+        let main = Main(session: session)
+        contentView!.addSubview(main)
+        
+        main.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
+        main.bottomAnchor.constraint(equalTo: contentView!.bottomAnchor).isActive = true
+        main.leftAnchor.constraint(equalTo: contentView!.leftAnchor).isActive = true
+        main.rightAnchor.constraint(equalTo: contentView!.rightAnchor).isActive = true
     }
 }
