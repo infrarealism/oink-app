@@ -7,20 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CEEC548F25023E9600B1CB99 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC548E25023E9600B1CB99 /* AppDelegate.swift */; };
-		CEEC549125023E9600B1CB99 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC549025023E9600B1CB99 /* ViewController.swift */; };
+		CEEC548F25023E9600B1CB99 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC548E25023E9600B1CB99 /* App.swift */; };
 		CEEC549325023E9700B1CB99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEEC549225023E9700B1CB99 /* Assets.xcassets */; };
-		CEEC549625023E9700B1CB99 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEEC549425023E9700B1CB99 /* Main.storyboard */; };
+		CEEC549F2502417900B1CB99 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC549E2502417900B1CB99 /* Window.swift */; };
+		CEEC54A12502418000B1CB99 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC54A02502418000B1CB99 /* Menu.swift */; };
+		CEEC54A32502424400B1CB99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC54A22502424400B1CB99 /* String.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		CEEC548B25023E9600B1CB99 /* Oink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oink.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEEC548E25023E9600B1CB99 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CEEC549025023E9600B1CB99 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CEEC548E25023E9600B1CB99 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		CEEC549225023E9700B1CB99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		CEEC549525023E9700B1CB99 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CEEC549725023E9700B1CB99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CEEC549825023E9700B1CB99 /* Oink.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Oink.entitlements; sourceTree = "<group>"; };
+		CEEC549E2502417900B1CB99 /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
+		CEEC54A02502418000B1CB99 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		CEEC54A22502424400B1CB99 /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +39,13 @@
 		CEEC548225023E9600B1CB99 = {
 			isa = PBXGroup;
 			children = (
-				CEEC548D25023E9600B1CB99 /* Oink */,
+				CEEC549825023E9700B1CB99 /* Oink.entitlements */,
+				CEEC549725023E9700B1CB99 /* Info.plist */,
+				CEEC548E25023E9600B1CB99 /* App.swift */,
+				CEEC54A02502418000B1CB99 /* Menu.swift */,
+				CEEC54A22502424400B1CB99 /* String.swift */,
+				CEEC549E2502417900B1CB99 /* Window.swift */,
+				CEEC549225023E9700B1CB99 /* Assets.xcassets */,
 				CEEC548C25023E9600B1CB99 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -48,19 +56,6 @@
 				CEEC548B25023E9600B1CB99 /* Oink.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CEEC548D25023E9600B1CB99 /* Oink */ = {
-			isa = PBXGroup;
-			children = (
-				CEEC548E25023E9600B1CB99 /* AppDelegate.swift */,
-				CEEC549025023E9600B1CB99 /* ViewController.swift */,
-				CEEC549225023E9700B1CB99 /* Assets.xcassets */,
-				CEEC549425023E9700B1CB99 /* Main.storyboard */,
-				CEEC549725023E9700B1CB99 /* Info.plist */,
-				CEEC549825023E9700B1CB99 /* Oink.entitlements */,
-			);
-			path = Oink;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,7 +117,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEEC549325023E9700B1CB99 /* Assets.xcassets in Resources */,
-				CEEC549625023E9700B1CB99 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -133,23 +127,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEEC549125023E9600B1CB99 /* ViewController.swift in Sources */,
-				CEEC548F25023E9600B1CB99 /* AppDelegate.swift in Sources */,
+				CEEC54A12502418000B1CB99 /* Menu.swift in Sources */,
+				CEEC548F25023E9600B1CB99 /* App.swift in Sources */,
+				CEEC54A32502424400B1CB99 /* String.swift in Sources */,
+				CEEC549F2502417900B1CB99 /* Window.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		CEEC549425023E9700B1CB99 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				CEEC549525023E9700B1CB99 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		CEEC549925023E9700B1CB99 /* Debug */ = {
@@ -206,9 +191,12 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Oink;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -250,6 +238,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -259,9 +248,12 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = Oink;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -269,19 +261,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Oink/Oink.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Oink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = Oink/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = Oink.Oink;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -289,19 +280,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = Oink/Oink.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Oink.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
-				INFOPLIST_FILE = Oink/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = Oink.Oink;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
