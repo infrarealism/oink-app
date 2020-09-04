@@ -15,10 +15,10 @@ final class Main: NSView {
         
         url.map {
             FileManager.default.enumerator(at: $0, includingPropertiesForKeys: nil, options: [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
-                
-                let url = $0 as! URL
-                
-                print(NSImage.imageTypes.contains(url.mime))
+                guard
+                    let url = $0 as? URL,
+                    NSImage.imageTypes.contains(url.mime)
+                else { return }
                 if image.image == nil {
                     image.image = try? NSImage(data: Data(contentsOf: url))
                 }

@@ -1,5 +1,4 @@
 import Foundation
-import CoreServices
 
 extension URL {
     var mime: String {
