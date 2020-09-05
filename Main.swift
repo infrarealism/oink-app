@@ -11,7 +11,10 @@ final class Main: NSView {
         
         let image = NSImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
+        image.imageScaling = .scaleProportionallyUpOrDown
         addSubview(image)
+        
+        let noCache = [kCGImageSourceShouldCache as String : kCFBooleanFalse] as CFDictionary
         
         url.map {
             FileManager.default.enumerator(at: $0, includingPropertiesForKeys: nil, options: [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
@@ -19,6 +22,11 @@ final class Main: NSView {
                     let url = $0 as? URL,
                     NSImage.imageTypes.contains(url.mime)
                 else { return }
+                
+                let source = try! CGImageSourceCreateWithData(Data(contentsOf: url) as CFData, noCache)
+                print(CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])
+                print("-----------------------------------------------")
+                
                 if image.image == nil {
                     image.image = try? NSImage(data: Data(contentsOf: url))
                 }
