@@ -9,6 +9,9 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
+        let scroll = Scroll()
+        addSubview(scroll)
+        
         let image = NSImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.imageScaling = .scaleProportionallyUpOrDown
