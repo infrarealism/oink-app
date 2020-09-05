@@ -9,6 +9,15 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
+        let grid = Grid()
+        addSubview(grid)
+        
+        grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        grid.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        grid.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        /*
         let scroll = Scroll()
         addSubview(scroll)
         
@@ -51,10 +60,14 @@ final class Main: NSView {
         image.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         image.widthAnchor.constraint(equalToConstant: 400).isActive = true
         image.heightAnchor.constraint(equalToConstant: 400).isActive = true
+        */
+    }
+    
+    override func viewDidEndLiveResize() {
+        
     }
     
     private func close() {
         url?.stopAccessingSecurityScopedResource()
     }
 }
-
