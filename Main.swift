@@ -14,7 +14,7 @@ final class Main: NSView {
         image.imageScaling = .scaleProportionallyUpOrDown
         addSubview(image)
         
-        let noCache = [kCGImageSourceShouldCache as String : kCFBooleanFalse] as CFDictionary
+        let noCache = [kCGImageSourceShouldCache : false] as CFDictionary
         
         url.map {
             FileManager.default.enumerator(at: $0, includingPropertiesForKeys: nil, options: [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
@@ -24,7 +24,7 @@ final class Main: NSView {
                 else { return }
                 
                 let source = try! CGImageSourceCreateWithURL(url as CFURL, nil)
-//                print(CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])
+                print(CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])
 //                print("-----------------------------------------------")
                 
                 if image.image == nil {
@@ -32,17 +32,22 @@ final class Main: NSView {
                     let x = try! NSBitmapImageRep(data: Data(contentsOf: url))
 //                    print(x)
                     
-//                    let raw = try! NSImage(data: Data(contentsOf: url))
-                    image.image = NSImage(cgImage: CGImageSourceCreateImageAtIndex(source!, 1, nil)!, size: .init(width: 50, height: 50))
+//                    image.image = try! NSImage(data: Data(contentsOf: url))
+                    image.image = NSImage(cgImage: CGImageSourceCreateThumbnailAtIndex(source!, 0, [
+                    kCGImageSourceCreateThumbnailFromImageAlways : false,
+                    kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
+                    kCGImageSourceThumbnailMaxPixelSize : 900] as CFDictionary)!, size: .init(width: 900, height: 900))
+//                    image.image = NSImage(cgImage: CGImageSourceCreateImageAtIndex(source!, 0, nil)!, size: .init(width: 50, height: 50))
 //                    print(raw?.representations)
+                    
                 }
             }
         }
         
         image.topAnchor.constraint(equalTo: topAnchor).isActive = true
         image.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 900).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 900).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 400).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 400).isActive = true
     }
     
     private func close() {
