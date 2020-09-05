@@ -23,20 +23,26 @@ final class Main: NSView {
                     NSImage.imageTypes.contains(url.mime)
                 else { return }
                 
-                let source = try! CGImageSourceCreateWithData(Data(contentsOf: url) as CFData, noCache)
-                print(CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])
-                print("-----------------------------------------------")
+                let source = try! CGImageSourceCreateWithURL(url as CFURL, nil)
+//                print(CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])
+//                print("-----------------------------------------------")
                 
                 if image.image == nil {
-                    image.image = try? NSImage(data: Data(contentsOf: url))
+                    
+                    let x = try! NSBitmapImageRep(data: Data(contentsOf: url))
+//                    print(x)
+                    
+//                    let raw = try! NSImage(data: Data(contentsOf: url))
+                    image.image = NSImage(cgImage: CGImageSourceCreateImageAtIndex(source!, 1, nil)!, size: .init(width: 50, height: 50))
+//                    print(raw?.representations)
                 }
             }
         }
         
         image.topAnchor.constraint(equalTo: topAnchor).isActive = true
         image.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        image.widthAnchor.constraint(equalToConstant: 300).isActive = true
-        image.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        image.widthAnchor.constraint(equalToConstant: 900).isActive = true
+        image.heightAnchor.constraint(equalToConstant: 900).isActive = true
     }
     
     private func close() {
