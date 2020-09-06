@@ -10,6 +10,7 @@ final class Main: NSView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let grid = Grid()
+        grid.items = (0 ... 5000).map { $0 }
         addSubview(grid)
         
         grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
