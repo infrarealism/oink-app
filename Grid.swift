@@ -4,6 +4,7 @@ import Combine
 final class Grid: NSScrollView {
     private var subs = Set<AnyCancellable>()
     private var queue = Set<Cell>()
+    private var active = Set<Cell>()
     private var positions = [CGPoint]()
     private var visible: [Bool]
     private let items: [Int]
@@ -11,12 +12,12 @@ final class Grid: NSScrollView {
     
     required init?(coder: NSCoder) { nil }
     init() {
-        items = (0 ... 500).map { $0 }
+        items = (0 ... 5000).map { $0 }
         visible = .init(repeating: false, count: items.count)
         
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        documentView = NSView(frame: .init(origin: .zero, size: .init(width: 1000, height: 1000)))
+        documentView = .init()
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
         
@@ -29,6 +30,7 @@ final class Grid: NSScrollView {
     
     override var frame: NSRect {
         didSet {
+            documentView!.frame.size.width = frame.width
             updatePositions()
             refresh()
         }
@@ -45,38 +47,50 @@ final class Grid: NSScrollView {
             positions.append(current)
         }
         self.positions = positions
+        documentView!.frame.size.height = current.y + size.height
     }
     
-    private var current: [Int] {
+    private var current: Set<Int> {
         let min = contentView.bounds.minY - size.height
         let max = contentView.bounds.maxY + 1
-        return (0 ..< items.count).filter {
+        return .init((0 ..< items.count).filter {
             positions[$0].y > min && positions[$0].y < max
-        }
+        })
     }
     
     private func refresh() {
-        purgeVisible()
-        
+        let current = self.current
+        let visible = self.visible
+        visible.enumerated().filter { $0.1 }.forEach { index in
+            guard !current.contains(index.0) else { return }
+            let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
+            cell.removeFromSuperview()
+            cell.index = nil
+            self.visible[index.0] = false
+            queue.insert(cell)
+        }
+        print("cells: \(active.count), queued: \(queue.count)")
         current.forEach {
             guard !visible[$0] else { return }
-            let cell = Cell(size)
-            cell.label.stringValue = "\($0)"
+            let cell = queue.popFirst() ?? Cell(size)
+            cell.index = $0
             cell.frame.origin = positions[$0]
             documentView!.addSubview(cell)
-            visible[$0] = true
+            active.insert(cell)
+            self.visible[$0] = true
         }
         
-        print("cells: \(documentView!.subviews.count), queued: \(queue.count)")
-    }
-    
-    private func purgeVisible() {
-        
+        print("cells: \(active.count), queued: \(queue.count)")
     }
 }
 
 private final class Cell: NSView {
-    private(set) weak var label: Label!
+    var index: Int? {
+        didSet {
+            label.stringValue = "\(index ?? -1)"
+        }
+    }
+    private weak var label: Label!
     
     required init?(coder: NSCoder) { nil }
     init(_ size: CGSize) {
