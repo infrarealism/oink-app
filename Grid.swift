@@ -8,6 +8,7 @@ final class Grid: NSScrollView {
     private var positions = [CGPoint]()
     private var visible: [Bool]
     private let items: [Int]
+    private var padding = CGPoint.zero
     private let size = CGSize(width: 100, height: 100)
     
     required init?(coder: NSCoder) { nil }
@@ -15,9 +16,10 @@ final class Grid: NSScrollView {
         items = (0 ... 5000).map { $0 }
         visible = .init(repeating: false, count: items.count)
         
+        final class Flipped: NSView { override var isFlipped: Bool { true } }
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
-        documentView = .init()
+        documentView = Flipped()
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
         
@@ -38,16 +40,17 @@ final class Grid: NSScrollView {
     
     private func updatePositions() {
         var positions = [CGPoint]()
-        var current = CGPoint(x: -size.width, y: 0)
+        padding.x = bounds.width.truncatingRemainder(dividingBy: size.width) / 2
+        var current = CGPoint(x: padding.x - size.width, y: padding.y)
         (0 ..< items.count).forEach { _ in
             current.x += size.width
             if current.x + size.width > bounds.width {
-                current = .init(x: 0, y: current.y + size.height)
+                current = .init(x: padding.x, y: current.y + size.height)
             }
             positions.append(current)
         }
         self.positions = positions
-        documentView!.frame.size.height = current.y + size.height
+        documentView!.frame.size.height = current.y + size.height + padding.y
     }
     
     private var current: Set<Int> {
@@ -65,44 +68,23 @@ final class Grid: NSScrollView {
             guard !current.contains(index.0) else { return }
             let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
             cell.removeFromSuperview()
-            cell.index = nil
             self.visible[index.0] = false
             queue.insert(cell)
         }
         print("cells: \(active.count), queued: \(queue.count)")
-        current.forEach {
-            guard !visible[$0] else { return }
+        current.forEach { index in
+            guard !visible[index] else {
+                active.first { $0.index == index }!.frame.origin = positions[index]
+                return
+            }
             let cell = queue.popFirst() ?? Cell(size)
-            cell.index = $0
-            cell.frame.origin = positions[$0]
+            cell.index = index
+            cell.frame.origin = positions[index]
             documentView!.addSubview(cell)
             active.insert(cell)
-            self.visible[$0] = true
+            self.visible[index] = true
         }
         
         print("cells: \(active.count), queued: \(queue.count)")
-    }
-}
-
-private final class Cell: NSView {
-    var index: Int? {
-        didSet {
-            label.stringValue = "\(index ?? -1)"
-        }
-    }
-    private weak var label: Label!
-    
-    required init?(coder: NSCoder) { nil }
-    init(_ size: CGSize) {
-        super.init(frame: .init(origin: .zero, size: size))
-        wantsLayer = true
-        layer!.backgroundColor = NSColor.systemIndigo.withAlphaComponent(0.5).cgColor
-        
-        let label = Label("", .systemFont(ofSize: 20, weight: .bold))
-        addSubview(label)
-        self.label = label
-        
-        label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
     }
 }
