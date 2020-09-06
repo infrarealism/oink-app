@@ -3,16 +3,16 @@ import Combine
 
 final class Grid: NSScrollView {
     private var subs = Set<AnyCancellable>()
-    private var cells = [Cell]()
+    private var queue = Set<Cell>()
     private var positions = [CGPoint]()
-    private var cellsHidden = [Int]()
-    private var cellsVisible = [Int]()
+    private var visible: [Bool]
     private let items: [Int]
     private let size = CGSize(width: 100, height: 100)
     
     required init?(coder: NSCoder) { nil }
     init() {
-        items = (0 ... 50).map { $0 }
+        items = (0 ... 500).map { $0 }
+        visible = .init(repeating: false, count: items.count)
         
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
@@ -21,7 +21,7 @@ final class Grid: NSScrollView {
         contentView.postsBoundsChangedNotifications = true
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
-//            self?.refresh()
+            self?.refresh()
             
 //            print(($0.object as! NSClipView).bounds.minY)
         }.store(in: &subs)
@@ -47,7 +47,7 @@ final class Grid: NSScrollView {
         self.positions = positions
     }
     
-    private var visibles: [Int] {
+    private var current: [Int] {
         let min = contentView.bounds.minY - size.height
         let max = contentView.bounds.maxY + 1
         return (0 ..< items.count).filter {
@@ -58,11 +58,16 @@ final class Grid: NSScrollView {
     private func refresh() {
         purgeVisible()
         
-        visibles.forEach {
+        current.forEach {
+            guard !visible[$0] else { return }
             let cell = Cell(size)
+            cell.label.stringValue = "\($0)"
             cell.frame.origin = positions[$0]
             documentView!.addSubview(cell)
+            visible[$0] = true
         }
+        
+        print("cells: \(documentView!.subviews.count), queued: \(queue.count)")
     }
     
     private func purgeVisible() {
@@ -77,7 +82,7 @@ private final class Cell: NSView {
     init(_ size: CGSize) {
         super.init(frame: .init(origin: .zero, size: size))
         wantsLayer = true
-        layer!.backgroundColor = NSColor.systemIndigo.cgColor
+        layer!.backgroundColor = NSColor.systemIndigo.withAlphaComponent(0.5).cgColor
         
         let label = Label("", .systemFont(ofSize: 20, weight: .bold))
         addSubview(label)
