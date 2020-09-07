@@ -27,7 +27,6 @@ final class Grid: NSScrollView {
     private var active = Set<Cell>()
     private var positions = [CGPoint]()
     private var visible = [Bool]()
-    private var padding = CGPoint(x: 0, y: 0)
     private var size = CGSize.zero
     private let width = CGFloat(120)
     
@@ -51,17 +50,16 @@ final class Grid: NSScrollView {
     
     private func updatePositions() {
         var positions = [CGPoint]()
-        padding.x = bounds.width.truncatingRemainder(dividingBy: size.width) / 2
-        var current = CGPoint(x: padding.x - size.width, y: padding.y)
+        var current = CGPoint(x: -size.width, y: 0)
         (0 ..< items.count).forEach { _ in
             current.x += size.width
             if current.x + size.width > bounds.width {
-                current = .init(x: padding.x, y: current.y + size.height)
+                current = .init(x: 0, y: current.y + size.height)
             }
             positions.append(current)
         }
         self.positions = positions
-        documentView!.frame.size.height = current.y + size.height + padding.y
+        documentView!.frame.size.height = current.y + size.height
     }
     
     private func render() {
