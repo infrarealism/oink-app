@@ -15,6 +15,9 @@ final class Grid: NSScrollView {
     override var frame: NSRect {
         didSet {
             documentView!.frame.size.width = frame.width
+            let count = floor(frame.width / width)
+            let delta = floor(frame.width.truncatingRemainder(dividingBy: width) / count)
+            size = .init(width: width + delta, height: width + delta)
             refresh()
         }
     }
@@ -24,8 +27,9 @@ final class Grid: NSScrollView {
     private var active = Set<Cell>()
     private var positions = [CGPoint]()
     private var visible = [Bool]()
-    private var padding = CGPoint(x: 0, y: 50)
-    private let size = CGSize(width: 200, height: 200)
+    private var padding = CGPoint(x: 0, y: 0)
+    private var size = CGSize.zero
+    private let width = CGFloat(120)
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -72,17 +76,18 @@ final class Grid: NSScrollView {
             queue.insert(cell)
         }
         current.forEach { index in
-            guard !visible[index] else {
-                active.first { $0.index == index }!.frame.origin = positions[index]
-                return
+            let cell: Cell
+            if visible[index] {
+                cell = active.first { $0.index == index }!
+            } else {
+                cell = queue.popFirst() ?? Cell(size)
+                cell.index = index
+                cell.item = items[index]
+                documentView!.addSubview(cell)
+                active.insert(cell)
+                self.visible[index] = true
             }
-            let cell = queue.popFirst() ?? Cell(size)
-            cell.index = index
-            cell.item = items[index]
-            cell.frame.origin = positions[index]
-            documentView!.addSubview(cell)
-            active.insert(cell)
-            self.visible[index] = true
+            cell.frame = .init(origin: positions[index], size: size)
         }
     }
     

@@ -14,7 +14,7 @@ final class Main: NSView {
         
         grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
         grid.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        grid.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        grid.leftAnchor.constraint(equalTo: leftAnchor, constant: 200).isActive = true
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
  
         var photos = [Photo]()
