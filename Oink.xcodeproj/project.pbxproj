@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE00140A25061B1500DEC8A3 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE00140925061B1500DEC8A3 /* Photo.swift */; };
 		CE2F71CD2504E832003CBA9E /* Grid.Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2F71CC2504E832003CBA9E /* Grid.Cell.swift */; };
 		CE342DB62502727F0060C9E5 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE342DB52502727F0060C9E5 /* App.swift */; };
 		CE342DB8250272940060C9E5 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE342DB7250272940060C9E5 /* Label.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CE00140925061B1500DEC8A3 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		CE2F71CC2504E832003CBA9E /* Grid.Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.Cell.swift; sourceTree = "<group>"; };
 		CE342DB52502727F0060C9E5 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		CE342DB7250272940060C9E5 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
@@ -67,12 +69,13 @@
 				CE735F1E25025B940034D80E /* Bookmark.swift */,
 				CE735F15250254130034D80E /* Control.Blob.swift */,
 				CE735F13250253D90034D80E /* Control.swift */,
-				CE65E7B12503B55400FB854B /* Grid.swift */,
 				CE2F71CC2504E832003CBA9E /* Grid.Cell.swift */,
+				CE65E7B12503B55400FB854B /* Grid.swift */,
 				CE342DB7250272940060C9E5 /* Label.swift */,
 				CE735F172502552A0034D80E /* Launch.swift */,
 				CE342DB9250277FE0060C9E5 /* Main.swift */,
 				CEEC54A02502418000B1CB99 /* Menu.swift */,
+				CE00140925061B1500DEC8A3 /* Photo.swift */,
 				CE65E7AF2503B43800FB854B /* Scroll.swift */,
 				CE735F19250257070034D80E /* Session.swift */,
 				CE342DBB250284800060C9E5 /* URL.swift */,
@@ -174,6 +177,7 @@
 				CE2F71CD2504E832003CBA9E /* Grid.Cell.swift in Sources */,
 				CE735F1A250257070034D80E /* Session.swift in Sources */,
 				CE65E7B22503B55400FB854B /* Grid.swift in Sources */,
+				CE00140A25061B1500DEC8A3 /* Photo.swift in Sources */,
 				CE735F182502552A0034D80E /* Launch.swift in Sources */,
 				CE342DB8250272940060C9E5 /* Label.swift in Sources */,
 				CE342DB62502727F0060C9E5 /* App.swift in Sources */,
