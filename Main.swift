@@ -10,7 +10,6 @@ final class Main: NSView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let grid = Grid()
-        grid.items = (0 ... 5000).map { $0 }
         addSubview(grid)
         
         grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -19,6 +18,8 @@ final class Main: NSView {
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
  
         var photos = [Photo]()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
         
         FileManager.default.enumerator(at: url!, includingPropertiesForKeys: nil, options:
             [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
@@ -31,17 +32,14 @@ final class Main: NSView {
                 guard
                     let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject],
                     let exif = dictionary["{Exif}"] as? [String : AnyObject],
-                    let date = exif["DateTimeOriginal"] as? String,
+                    let rawDate = exif["DateTimeOriginal"] as? String,
+                    let date = formatter.date(from: rawDate),
                     let isos = exif["ISOSpeedRatings"] as? [Int],
                     let iso = isos.first
                 else { return }
-                
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
-                print(formatter.date(from: date))
-                
-                print("success \(date)")
+                photos.append(.init(url, date: date, iso: iso))
         }
+        grid.items = photos.sorted { $0.date < $1.date }
     }
     
     override func viewDidEndLiveResize() {

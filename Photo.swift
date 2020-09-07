@@ -4,18 +4,22 @@ struct Photo {
     let url: URL
     let date: Date
     let iso: Int
+    private var _image: CGImage?
     
-    /*
-     
-     let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
-     guard
-         let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject],
-         let exif = dictionary["{Exif}"]
-     else { return }
-     
-     let image = NSImage(cgImage: CGImageSourceCreateThumbnailAtIndex(source!, 0, [
-     kCGImageSourceCreateThumbnailFromImageAlways : false,
-     kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
-     kCGImageSourceThumbnailMaxPixelSize : 900] as CFDictionary)!, size: .init(width: 900, height: 900))
-     */
+    init(_ url: URL, date: Date, iso: Int) {
+        self.url = url
+        self.date = date
+        self.iso = iso
+    }
+    
+    mutating func image() -> CGImage? {
+        if _image == nil {
+            let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
+            _image = CGImageSourceCreateThumbnailAtIndex(source!, 0, [
+                kCGImageSourceCreateThumbnailFromImageAlways : false,
+                kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
+                kCGImageSourceThumbnailMaxPixelSize : 900] as CFDictionary)
+        }
+        return _image
+    }
 }

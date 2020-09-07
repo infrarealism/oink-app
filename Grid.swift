@@ -2,7 +2,7 @@ import AppKit
 import Combine
 
 final class Grid: NSScrollView {
-    var items = [Int]() {
+    var items = [Photo]() {
         didSet {
             documentView!.subviews.forEach { $0.removeFromSuperview() }
             queue = []
@@ -67,6 +67,7 @@ final class Grid: NSScrollView {
             guard !current.contains(index.0) else { return }
             let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
             cell.removeFromSuperview()
+            cell.item = nil
             self.visible[index.0] = false
             queue.insert(cell)
         }
@@ -77,6 +78,7 @@ final class Grid: NSScrollView {
             }
             let cell = queue.popFirst() ?? Cell(size)
             cell.index = index
+            cell.item = items[index]
             cell.frame.origin = positions[index]
             documentView!.addSubview(cell)
             active.insert(cell)

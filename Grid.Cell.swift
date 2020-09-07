@@ -2,8 +2,14 @@ import AppKit
 
 extension Grid {
     final class Cell: NSView {
-        var index = 0 { didSet { label.stringValue = "\(index)" } }
-        private weak var label: Label!
+        var item: Photo? {
+            didSet {
+                image.image = item?.image().map { NSImage(cgImage: $0, size: .init(width: 200, height: 200)) }
+            }
+        }
+        
+        var index = 0
+        private weak var image: NSImageView!
         
         required init?(coder: NSCoder) { nil }
         init(_ size: CGSize) {
@@ -11,12 +17,16 @@ extension Grid {
             wantsLayer = true
             layer!.backgroundColor = NSColor.systemIndigo.withAlphaComponent(0.5).cgColor
             
-            let label = Label("", .systemFont(ofSize: 20, weight: .bold))
-            addSubview(label)
-            self.label = label
+            let image = NSImageView()
+            image.translatesAutoresizingMaskIntoConstraints = false
+            image.imageScaling = .scaleProportionallyUpOrDown
+            addSubview(image)
+            self.image = image
             
-            label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-            label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            image.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            image.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            image.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            image.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         }
     }
 }
