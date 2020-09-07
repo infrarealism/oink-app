@@ -4,22 +4,29 @@ extension Grid {
     final class Cell: NSView {
         var item: Photo? {
             didSet {
-                image.image = item?.image().map { NSImage(cgImage: $0, size: .init(width: 200, height: 200)) }
+                image.image = item?.image()
+//                guard let photo = item?.image().map({ NSImage(cgImage: $0, size: .zero) }) else {
+//                    image.image = nil
+//                    return
+//                }
+//                image.alphaValue = 0
+//                image.image = photo
+//                NSAnimationContext.runAnimationGroup {
+//                    $0.duration = 1
+//                    $0.allowsImplicitAnimation = true
+//                    image.alphaValue = 1
+//                }
             }
         }
         
         var index = 0
-        private weak var image: NSImageView!
+        private weak var image: Image!
         
         required init?(coder: NSCoder) { nil }
         init(_ size: CGSize) {
             super.init(frame: .init(origin: .zero, size: size))
-            wantsLayer = true
-            layer!.backgroundColor = NSColor.systemIndigo.withAlphaComponent(0.5).cgColor
             
-            let image = NSImageView()
-            image.translatesAutoresizingMaskIntoConstraints = false
-            image.imageScaling = .scaleProportionallyUpOrDown
+            let image = Image()
             addSubview(image)
             self.image = image
             

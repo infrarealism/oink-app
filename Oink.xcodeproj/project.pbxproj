@@ -20,6 +20,7 @@
 		CE735F1A250257070034D80E /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F19250257070034D80E /* Session.swift */; };
 		CE735F1D250257680034D80E /* Balam in Frameworks */ = {isa = PBXBuildFile; productRef = CE735F1C250257680034D80E /* Balam */; };
 		CE735F1F25025B940034D80E /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F1E25025B940034D80E /* Bookmark.swift */; };
+		CEE508F52506347200E60BA6 /* Grid.Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE508F42506347200E60BA6 /* Grid.Image.swift */; };
 		CEEC549325023E9700B1CB99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEEC549225023E9700B1CB99 /* Assets.xcassets */; };
 		CEEC549F2502417900B1CB99 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC549E2502417900B1CB99 /* Window.swift */; };
 		CEEC54A12502418000B1CB99 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC54A02502418000B1CB99 /* Menu.swift */; };
@@ -38,6 +39,7 @@
 		CE735F172502552A0034D80E /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
 		CE735F19250257070034D80E /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CE735F1E25025B940034D80E /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		CEE508F42506347200E60BA6 /* Grid.Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.Image.swift; sourceTree = "<group>"; };
 		CEEC548B25023E9600B1CB99 /* Oink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEC549225023E9700B1CB99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEEC549725023E9700B1CB99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				CE735F15250254130034D80E /* Control.Blob.swift */,
 				CE735F13250253D90034D80E /* Control.swift */,
 				CE2F71CC2504E832003CBA9E /* Grid.Cell.swift */,
+				CEE508F42506347200E60BA6 /* Grid.Image.swift */,
 				CE65E7B12503B55400FB854B /* Grid.swift */,
 				CE342DB7250272940060C9E5 /* Label.swift */,
 				CE735F172502552A0034D80E /* Launch.swift */,
@@ -178,6 +181,7 @@
 				CE342DB8250272940060C9E5 /* Label.swift in Sources */,
 				CE342DB62502727F0060C9E5 /* App.swift in Sources */,
 				CEEC549F2502417900B1CB99 /* Window.swift in Sources */,
+				CEE508F52506347200E60BA6 /* Grid.Image.swift in Sources */,
 				CE735F1F25025B940034D80E /* Bookmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

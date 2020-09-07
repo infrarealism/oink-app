@@ -18,7 +18,7 @@ struct Photo {
             _image = CGImageSourceCreateThumbnailAtIndex(source!, 0, [
                 kCGImageSourceCreateThumbnailFromImageAlways : false,
                 kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
-                kCGImageSourceThumbnailMaxPixelSize : 900] as CFDictionary)
+                kCGImageSourceThumbnailMaxPixelSize : 200] as CFDictionary)
         }
         return _image
     }
