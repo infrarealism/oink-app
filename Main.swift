@@ -18,21 +18,29 @@ final class Main: NSView {
         grid.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
  
+        var photos = [Photo]()
+        
         FileManager.default.enumerator(at: url!, includingPropertiesForKeys: nil, options:
             [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
-            guard
-                let url = $0 as? URL,
-                NSImage.imageTypes.contains(url.mime)
-            else { return }
-            
-            let source = try! CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
-            print((CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String: AnyObject])?["{Exif}"])
+                guard
+                    let url = $0 as? URL,
+                    NSImage.imageTypes.contains(url.mime)
+                else { return }
                 
-                let image = NSImage(cgImage: CGImageSourceCreateThumbnailAtIndex(source!, 0, [
-                kCGImageSourceCreateThumbnailFromImageAlways : false,
-                kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
-                kCGImageSourceThumbnailMaxPixelSize : 900] as CFDictionary)!, size: .init(width: 900, height: 900))
-             
+                let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
+                guard
+                    let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject],
+                    let exif = dictionary["{Exif}"] as? [String : AnyObject],
+                    let date = exif["DateTimeOriginal"] as? String,
+                    let isos = exif["ISOSpeedRatings"] as? [Int],
+                    let iso = isos.first
+                else { return }
+                
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+                print(formatter.date(from: date))
+                
+                print("success \(date)")
         }
     }
     
