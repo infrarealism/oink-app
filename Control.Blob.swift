@@ -27,7 +27,6 @@ extension Control {
             circle.imageScaling = .scaleNone
             addSubview(circle)
             self.circle = circle
-
             
             let icon = NSImageView(image: NSImage(named: icon)!)
             icon.translatesAutoresizingMaskIntoConstraints = false

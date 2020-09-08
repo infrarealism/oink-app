@@ -25,25 +25,25 @@ final class Main: NSView {
             [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
                 guard
                     let url = $0 as? URL,
-                    NSImage.imageTypes.contains(url.mime)
+                    NSImage.imageTypes.contains(url.mime),
+                    let bytes = (try? FileManager.default.attributesOfItem(atPath: url.path)).flatMap({ $0[.size] as? Int })
                 else { return }
                 
                 let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
                 guard
                     let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject],
                     let exif = dictionary["{Exif}"] as? [String : AnyObject],
+                    let width = dictionary["PixelWidth"] as? Int,
+                    let height = dictionary["PixelHeight"] as? Int,
                     let rawDate = exif["DateTimeOriginal"] as? String,
                     let date = formatter.date(from: rawDate),
                     let isos = exif["ISOSpeedRatings"] as? [Int],
                     let iso = isos.first
                 else { return }
-                photos.append(.init(url, date: date, iso: iso))
+                
+                photos.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
         }
         grid.items = photos.sorted { $0.date < $1.date }
-    }
-    
-    override func viewDidEndLiveResize() {
-        
     }
     
     private func close() {

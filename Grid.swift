@@ -28,7 +28,7 @@ final class Grid: NSScrollView {
     private var positions = [CGPoint]()
     private var visible = [Bool]()
     private var size = CGSize.zero
-    private let width = CGFloat(320)
+    private let width = CGFloat(120)
     
     required init?(coder: NSCoder) { nil }
     init() {
@@ -56,25 +56,16 @@ final class Grid: NSScrollView {
         display.translatesAutoresizingMaskIntoConstraints = false
         superview!.addSubview(display)
         
-        let top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
-        let bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: cell.frame.maxY - frame.height)
-        let left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
-        let right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
-        top.isActive = true
-        bottom.isActive = true
-        left.isActive = true
-        right.isActive = true
-        
+        display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
+        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: cell.frame.maxY - frame.height)
+        display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
+        display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
         superview!.layoutSubtreeIfNeeded()
 
         DispatchQueue.main.async { [weak self] in
-            top.constant = 0
-            bottom.constant = 0
-            left.constant = 0
-            right.constant = 0
-        
+            display.big()
             NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.5
+                $0.duration = 0.4
                 $0.allowsImplicitAnimation = true
                 self?.superview!.layoutSubtreeIfNeeded()
             }) {
