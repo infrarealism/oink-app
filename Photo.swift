@@ -9,17 +9,13 @@ final class Photo {
     }
     
     var image: CGImage? {
-        if _image == nil {
-            _image = render(size: 1000)
-        }
-        return _image
+        render(size: 1000)
     }
     
     let url: URL
     let date: Date
     let iso: Int
     private var _thumb: CGImage?
-    private var _image: CGImage?
     
     init(_ url: URL, date: Date, iso: Int) {
         self.url = url

@@ -78,7 +78,7 @@ final class Grid: NSScrollView {
                 $0.allowsImplicitAnimation = true
                 self?.superview!.layoutSubtreeIfNeeded()
             }) {
-                display.hd()
+                display.open()
             }
         }
     }
