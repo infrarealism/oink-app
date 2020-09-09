@@ -4,9 +4,11 @@ extension Display {
     final class Bar: NSView {
         weak var top: NSLayoutConstraint! { didSet { top.isActive = true } }
         private(set) weak var close: Control.Button!
+        private weak var item: Photo!
         
         required init?(coder: NSCoder) { nil }
         init(_ item: Photo) {
+            self.item = item
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             wantsLayer = true
@@ -26,6 +28,8 @@ extension Display {
             addSubview(label)
             
             let share = Control.Circle(icon: "share", background: .systemIndigo, foreground: .white)
+            share.target = self
+            share.action = #selector(self.share)
             addSubview(share)
             
             heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -39,6 +43,11 @@ extension Display {
             
             share.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
             share.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        }
+        
+        @objc private func share(_ button: Control.Circle) {
+            let export = Export(item: item)
+            export.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }
 }
