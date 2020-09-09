@@ -2,12 +2,15 @@ import AppKit
 
 final class Export: NSPopover {
     private weak var main: Main!
+    private weak var segmented: Segmented!
     private let sizes: [CGSize]
-    private let width = [CGFloat(320), 640, 1024, 1400]
+    private let widths = [CGFloat(320), 640, 1024, 1400]
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
-        sizes =
+        sizes = (widths.filter { $0 < main.item!.size.width } + [main.item!.size.width]).map {
+            .init(width: $0, height: ceil($0 / main.item!.size.width * main.item!.size.height))
+        }
         self.main = main
         super.init()
         behavior = .transient
@@ -18,11 +21,14 @@ final class Export: NSPopover {
         let title = Label("Resolution", .systemFont(ofSize: 16, weight: .bold))
         contentViewController!.view.addSubview(title)
         
-        let segmented = Segmented(items: ["320x240", "640×480", "1024x768", "1400×1050", "6000x6000"])
-        segmented.selected.value = 2
+        let segmented = Segmented(items: sizes.map { "\(Int($0.width))×\(Int($0.height))" })
+        segmented.selected.value = widths.count / 2
         contentViewController!.view.addSubview(segmented)
+        self.segmented = segmented
         
         let button = Control.Title(text: "Export", background: .systemPink, foreground: .white)
+        button.target = self
+        button.action = #selector(save)
         contentViewController!.view.addSubview(button)
         
         title.leftAnchor.constraint(equalTo: segmented.leftAnchor).isActive = true
@@ -34,5 +40,19 @@ final class Export: NSPopover {
         
         button.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 40).isActive = true
         button.centerXAnchor.constraint(equalTo: contentViewController!.view.centerXAnchor).isActive = true
+    }
+    
+    @objc private func save() {
+        let size = sizes[segmented.selected.value]
+        let main = self.main!
+        let save = NSSavePanel()
+        save.nameFieldStringValue = main.item!.url.lastPathComponent
+        save.allowedFileTypes = ["jpg"]
+        save.beginSheetModal(for: main.window!) {
+            if $0 == .OK, let url = save.url {
+                try? main.item!.export(size).write(to: url, options: .atomic)
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+            }
+        }
     }
 }

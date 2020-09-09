@@ -27,10 +27,16 @@ final class Photo {
         self.bytes = bytes
     }
     
+    func export(_ size: CGSize) -> Data {
+        let data = NSMutableData()
+        let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeJPEG, 1, nil)!
+        CGImageDestinationAddImage(destination, render(size: max(size.width, size.height))!, nil)
+        CGImageDestinationFinalize(destination)
+        return data as Data
+    }
+    
     private func render(size: CGFloat) -> CGImage? {
         CGImageSourceCreateThumbnailAtIndex(CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
-                                            [kCGImageSourceCreateThumbnailFromImageAlways : false,
-                                             kCGImageSourceCreateThumbnailFromImageIfAbsent : false,
-                                             kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
+                                            [kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
     }
 }
