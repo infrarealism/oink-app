@@ -4,11 +4,11 @@ extension Display {
     final class Bar: NSView {
         weak var top: NSLayoutConstraint! { didSet { top.isActive = true } }
         private(set) weak var close: Control.Button!
-        private weak var item: Photo!
+        private weak var main: Main!
         
         required init?(coder: NSCoder) { nil }
-        init(_ item: Photo) {
-            self.item = item
+        init(main: Main) {
+            self.main = main
             super.init(frame: .zero)
             translatesAutoresizingMaskIntoConstraints = false
             wantsLayer = true
@@ -23,7 +23,7 @@ extension Display {
             date.timeStyle = .short
             let bytes = ByteCountFormatter()
             
-            let label = Label(date.string(from: item.date) + " - \(Int(item.size.width))×\(Int(item.size.height)) - " + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)), .systemFont(ofSize: 13, weight: .regular))
+            let label = Label(date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)), .systemFont(ofSize: 13, weight: .regular))
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(label)
             
@@ -46,7 +46,7 @@ extension Display {
         }
         
         @objc private func share(_ button: Control.Circle) {
-            let export = Export(item: item)
+            let export = Export(main: main)
             export.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }

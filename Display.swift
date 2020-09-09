@@ -5,23 +5,23 @@ final class Display: NSView {
     weak var bottom: NSLayoutConstraint! { didSet { bottom.isActive = true } }
     weak var left: NSLayoutConstraint! { didSet { left.isActive = true } }
     weak var right: NSLayoutConstraint! { didSet { right.isActive = true } }
-    private weak var item: Photo!
+    private weak var main: Main!
     private weak var bar: Bar!
     private var padding = CGRect.zero
     
     required init?(coder: NSCoder) { nil }
-    init(item: Photo) {
-        self.item = item
+    init(main: Main) {
+        self.main = main
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
         let layer = CALayer()
         layer.contentsGravity = .resizeAspectFill
-        layer.contents = item.thumb
+        layer.contents = main.item!.thumb
         self.layer = layer
         wantsLayer = true
         
-        let bar = Bar(item)
+        let bar = Bar(main: main)
         bar.close.target = self
         bar.close.action = #selector(close)
         addSubview(bar)
@@ -44,7 +44,7 @@ final class Display: NSView {
         let transition = CABasicAnimation(keyPath: "contents")
         transition.duration = 0.3
         transition.timingFunction = .init(name: .easeOut)
-        layer!.contents = item.image
+        layer!.contents = main.item!.image
         layer!.add(transition, forKey: "contents")
         
         bar.top.constant = 0
@@ -68,6 +68,7 @@ final class Display: NSView {
             $0.allowsImplicitAnimation = true
             superview!.layoutSubtreeIfNeeded()
         }) { [weak self] in
+            self?.main.item = nil
             self?.removeFromSuperview()
         }
     }

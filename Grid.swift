@@ -22,6 +22,7 @@ final class Grid: NSScrollView {
         }
     }
     
+    private weak var main: Main!
     private var subs = Set<AnyCancellable>()
     private var queue = Set<Cell>()
     private var active = Set<Cell>()
@@ -31,7 +32,8 @@ final class Grid: NSScrollView {
     private let width = CGFloat(120)
     
     required init?(coder: NSCoder) { nil }
-    init() {
+    init(main: Main) {
+        self.main = main
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         documentView = Content()
@@ -44,30 +46,33 @@ final class Grid: NSScrollView {
     }
     
     override func mouseDown(with: NSEvent) {
-        guard let cell = hitTest(with.locationInWindow) as? Grid.Cell else { return }
+        guard main.item == nil, let cell = hitTest(with.locationInWindow) as? Grid.Cell else { return }
         cell.highlighted = true
     }
     
     override func mouseUp(with: NSEvent) {
+        guard main.item == nil else { return }
+        
         active.filter { $0.highlighted }.forEach { $0.highlighted = false }
         guard let cell = hitTest(with.locationInWindow) as? Grid.Cell else { return }
+        main.item = cell.item
         
-        let display = Display(item: cell.item!)
+        let display = Display(main: main)
         display.translatesAutoresizingMaskIntoConstraints = false
-        superview!.addSubview(display)
+        main.addSubview(display)
         
         display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
         display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: cell.frame.maxY - frame.height)
         display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
         display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
-        superview!.layoutSubtreeIfNeeded()
+        main.layoutSubtreeIfNeeded()
 
         DispatchQueue.main.async { [weak self] in
             display.big()
             NSAnimationContext.runAnimationGroup({
                 $0.duration = 0.4
                 $0.allowsImplicitAnimation = true
-                self?.superview!.layoutSubtreeIfNeeded()
+                self?.main.layoutSubtreeIfNeeded()
             }) {
                 display.open()
             }

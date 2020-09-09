@@ -1,6 +1,7 @@
 import AppKit
 
 final class Main: NSView {
+    weak var item: Photo?
     private let url: URL?
     
     required init?(coder: NSCoder) { nil }
@@ -9,7 +10,7 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
-        let grid = Grid()
+        let grid = Grid(main: self)
         addSubview(grid)
         
         grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
