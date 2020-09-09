@@ -26,6 +26,8 @@
 		CE735F1A250257070034D80E /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F19250257070034D80E /* Session.swift */; };
 		CE735F1D250257680034D80E /* Balam in Frameworks */ = {isa = PBXBuildFile; productRef = CE735F1C250257680034D80E /* Balam */; };
 		CE735F1F25025B940034D80E /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F1E25025B940034D80E /* Bookmark.swift */; };
+		CE8C2DF625092AFD000DC2F8 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C2DF525092AFD000DC2F8 /* Separator.swift */; };
+		CE8C2DF825092CFA000DC2F8 /* Control.Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */; };
 		CEEC549325023E9700B1CB99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEEC549225023E9700B1CB99 /* Assets.xcassets */; };
 		CEEC549F2502417900B1CB99 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC549E2502417900B1CB99 /* Window.swift */; };
 		CEEC54A12502418000B1CB99 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC54A02502418000B1CB99 /* Menu.swift */; };
@@ -50,6 +52,8 @@
 		CE735F172502552A0034D80E /* Launch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launch.swift; sourceTree = "<group>"; };
 		CE735F19250257070034D80E /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		CE735F1E25025B940034D80E /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		CE8C2DF525092AFD000DC2F8 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
+		CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.Title.swift; sourceTree = "<group>"; };
 		CEEC548B25023E9600B1CB99 /* Oink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEC549225023E9700B1CB99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEEC549725023E9700B1CB99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +85,7 @@
 				CE0C6F2A2507875A0078B59A /* Control.Button.swift */,
 				CE12E2942507DC830010CF30 /* Control.Circle.swift */,
 				CE735F13250253D90034D80E /* Control.swift */,
+				CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */,
 				CE0C6F2C25078E3C0078B59A /* Display.Bar.swift */,
 				CE16437E250665B500F2CF2B /* Display.swift */,
 				CE2AC9F02508EAEE00AF620A /* Export.swift */,
@@ -92,6 +97,7 @@
 				CEEC54A02502418000B1CB99 /* Menu.swift */,
 				CE00140925061B1500DEC8A3 /* Photo.swift */,
 				CE2AC9F22508F0AB00AF620A /* Segmented.swift */,
+				CE8C2DF525092AFD000DC2F8 /* Separator.swift */,
 				CE735F19250257070034D80E /* Session.swift */,
 				CE342DBB250284800060C9E5 /* URL.swift */,
 				CEEC549E2502417900B1CB99 /* Window.swift */,
@@ -194,12 +200,14 @@
 				CE735F1A250257070034D80E /* Session.swift in Sources */,
 				CE65E7B22503B55400FB854B /* Grid.swift in Sources */,
 				CE00140A25061B1500DEC8A3 /* Photo.swift in Sources */,
+				CE8C2DF825092CFA000DC2F8 /* Control.Title.swift in Sources */,
 				CE2AC9F12508EAEE00AF620A /* Export.swift in Sources */,
 				CE735F182502552A0034D80E /* Launch.swift in Sources */,
 				CE0C6F2B2507875A0078B59A /* Control.Button.swift in Sources */,
 				CE2AC9F32508F0AB00AF620A /* Segmented.swift in Sources */,
 				CE16437F250665B500F2CF2B /* Display.swift in Sources */,
 				CE342DB8250272940060C9E5 /* Label.swift in Sources */,
+				CE8C2DF625092AFD000DC2F8 /* Separator.swift in Sources */,
 				CE342DB62502727F0060C9E5 /* App.swift in Sources */,
 				CEEC549F2502417900B1CB99 /* Window.swift in Sources */,
 				CE735F1F25025B940034D80E /* Bookmark.swift in Sources */,

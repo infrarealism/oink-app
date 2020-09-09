@@ -10,6 +10,9 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
+        let separator = Separator()
+        addSubview(separator)
+        
         let grid = Grid(main: self)
         addSubview(grid)
         
@@ -17,6 +20,11 @@ final class Main: NSView {
         grid.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         grid.leftAnchor.constraint(equalTo: leftAnchor, constant: 200).isActive = true
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        separator.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        separator.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        separator.rightAnchor.constraint(equalTo: grid.leftAnchor).isActive = true
+        separator.widthAnchor.constraint(equalToConstant: 1).isActive = true
  
         var photos = [Photo]()
         let formatter = DateFormatter()
