@@ -42,7 +42,7 @@ final class Segmented: NSView {
             left = $0.rightAnchor
         }
         
-        heightAnchor.constraint(equalToConstant: 26).isActive = true
+        heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         indicator.topAnchor.constraint(equalTo: topAnchor).isActive = true
         indicator.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
