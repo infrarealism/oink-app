@@ -49,7 +49,7 @@ final class Display: NSView {
         
         bar.top.constant = 0
         NSAnimationContext.runAnimationGroup {
-            $0.duration = 0.3
+            $0.duration = 0.25
             $0.allowsImplicitAnimation = true
             layoutSubtreeIfNeeded()
         }
@@ -64,7 +64,7 @@ final class Display: NSView {
         right.constant = padding.size.width
         
         NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.4
+            $0.duration = 0.3
             $0.allowsImplicitAnimation = true
             superview!.layoutSubtreeIfNeeded()
         }) { [weak self] in

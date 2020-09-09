@@ -39,7 +39,6 @@ extension Display {
             
             label.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             label.leftAnchor.constraint(equalTo: close.rightAnchor, constant: 5).isActive = true
-            label.rightAnchor.constraint(lessThanOrEqualTo: share.leftAnchor, constant: -20).isActive = true
             
             share.rightAnchor.constraint(equalTo: rightAnchor, constant: -15).isActive = true
             share.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true

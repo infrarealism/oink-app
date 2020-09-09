@@ -51,7 +51,7 @@ final class Menu: NSMenu {
         .init(title: "Minimize", action: #selector(NSWindow.miniaturize), keyEquivalent: "m"),
         .init(title: "Zoom", action: #selector(NSWindow.zoom), keyEquivalent: "p"),
         .separator(),
-        .init(title: "Bring.all", action: #selector(NSApplication.arrangeInFront), keyEquivalent: ""),
+        .init(title: "Bring All to Front", action: #selector(NSApplication.arrangeInFront), keyEquivalent: ""),
         .separator(),
         .init(title: "Close", action: #selector(NSWindow.close), keyEquivalent: "w")])
     }
