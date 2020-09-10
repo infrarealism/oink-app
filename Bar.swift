@@ -18,7 +18,11 @@ final class Bar: NSVisualEffectView {
         count.numberStyle = .decimal
         let bytes = ByteCountFormatter()
         
-        let info = Label(count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes)), .systemFont(ofSize: 14, weight: .medium))
+        let title = Label(main.url?.lastPathComponent ?? "", .systemFont(ofSize: 18, weight: .medium))
+        title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        addSubview(title)
+        
+        let info = Label(count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes)), .systemFont(ofSize: 14, weight: .regular))
         info.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(info)
         
@@ -28,6 +32,10 @@ final class Bar: NSVisualEffectView {
         addSubview(close)
         
         widthAnchor.constraint(equalToConstant: 180).isActive = true
+        
+        title.bottomAnchor.constraint(equalTo: info.topAnchor).isActive = true
+        title.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        title.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
         info.bottomAnchor.constraint(equalTo: close.topAnchor, constant: -20).isActive = true
         info.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true

@@ -55,7 +55,7 @@ final class Grid: NSScrollView {
         main.addSubview(display)
         
         display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
-        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: cell.frame.maxY - frame.height)
+        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: (cell.frame.maxY - contentView.bounds.minY) - frame.height)
         display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
         display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
         main.layoutSubtreeIfNeeded()

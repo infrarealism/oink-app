@@ -4,12 +4,11 @@ extension Grid {
     final class Cell: NSView {
         weak var item: Photo? {
             didSet {
-                guard let image = item?.thumb else {
-                    self.layer = nil
-                    wantsLayer = false
-                    return
-                }
+                self.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
+                
+                guard let image = item?.thumb else { return }
                 let layer = CALayer()
+                layer.frame = .init(x: -12, y: -12, width: self.layer!.frame.width + 24, height: self.layer!.frame.height + 24)
                 layer.contentsGravity = .resizeAspectFill
                 layer.contents = image
                 
@@ -18,8 +17,7 @@ extension Grid {
                 transition.timingFunction = .init(name: .easeOut)
                 transition.fromValue = 0
                 layer.add(transition, forKey: "opacity")
-                self.layer = layer
-                wantsLayer = true
+                self.layer!.addSublayer(layer)
             }
         }
         
@@ -28,10 +26,10 @@ extension Grid {
                 layer!.borderWidth = highlighted ? 3 : 0
                 layer!.borderColor = NSColor.systemIndigo.cgColor
                 
-                let transition = CABasicAnimation(keyPath: "border")
-                transition.duration = 1
+                let transition = CABasicAnimation(keyPath: "borderWidth")
+                transition.duration = 0.3
                 transition.timingFunction = .init(name: .easeOut)
-                layer!.add(transition, forKey: "border")
+                layer!.add(transition, forKey: "borderWidth")
             }
         }
         
@@ -40,6 +38,7 @@ extension Grid {
         required init?(coder: NSCoder) { nil }
         init(_ size: CGSize) {
             super.init(frame: .init(origin: .zero, size: size))
+            wantsLayer = true
         }
     }
 }

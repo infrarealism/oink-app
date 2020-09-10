@@ -3,23 +3,23 @@ import Foundation
 final class Photo {
     var thumb: CGImage? {
         if _thumb == nil {
-            _thumb = render(size: 200)
+            _thumb = render(size: 100, force: false)
         }
         return _thumb
     }
     
     var image: CGImage? {
-        render(size: min(1024, min(size.width, size.height)))
+        render(size: min(1024, min(size.width, size.height)), force: true)
     }
     
     let url: URL
     let date: Date
-    let iso: Int
+    let iso: Int?
     let size: CGSize
     let bytes: Int
     private var _thumb: CGImage?
     
-    init(_ url: URL, date: Date, iso: Int, size: CGSize, bytes: Int) {
+    init(_ url: URL, date: Date, iso: Int?, size: CGSize, bytes: Int) {
         self.url = url
         self.date = date
         self.iso = iso
@@ -30,13 +30,15 @@ final class Photo {
     func export(_ size: CGSize) -> Data {
         let data = NSMutableData()
         let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeJPEG, 1, nil)!
-        CGImageDestinationAddImage(destination, render(size: max(size.width, size.height))!, nil)
+        CGImageDestinationAddImage(destination, render(size: max(size.width, size.height), force: true)!, nil)
         CGImageDestinationFinalize(destination)
         return data as Data
     }
     
-    private func render(size: CGFloat) -> CGImage? {
+    private func render(size: CGFloat, force: Bool) -> CGImage? {
         CGImageSourceCreateThumbnailAtIndex(CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
-                                            [kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
+                                            [kCGImageSourceCreateThumbnailFromImageAlways : force,
+                                             kCGImageSourceCreateThumbnailFromImageIfAbsent : true,
+                                             kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
     }
 }

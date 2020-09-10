@@ -18,6 +18,7 @@ final class Display: NSView {
         let layer = CALayer()
         layer.contentsGravity = .resizeAspectFill
         layer.contents = main.item!.thumb
+        layer.backgroundColor = NSColor.controlBackgroundColor.cgColor
         self.layer = layer
         wantsLayer = true
         
@@ -64,7 +65,7 @@ final class Display: NSView {
         right.constant = padding.size.width
         
         NSAnimationContext.runAnimationGroup({
-            $0.duration = 0.3
+            $0.duration = 0.4
             $0.allowsImplicitAnimation = true
             superview!.layoutSubtreeIfNeeded()
         }) { [weak self] in

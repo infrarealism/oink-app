@@ -23,7 +23,9 @@ extension Display {
             date.timeStyle = .short
             let bytes = ByteCountFormatter()
             
-            let label = Label(date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)), .systemFont(ofSize: 13, weight: .regular))
+            let title = main.item!.url.lastPathComponent + " - " + date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)) + (main.item!.iso == nil ? "" : " - ISO \(main.item!.iso!)")
+            
+            let label = Label(title, .systemFont(ofSize: 13, weight: .regular))
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(label)
             

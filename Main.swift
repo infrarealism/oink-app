@@ -3,7 +3,11 @@ import AppKit
 final class Main: NSView {
     weak var item: Photo?
     private(set) weak var session: Session!
-    private let url: URL?
+    let url: URL?
+    
+    deinit {
+        url?.stopAccessingSecurityScopedResource()
+    }
     
     required init?(coder: NSCoder) { nil }
     init(session: Session, bookmark: Bookmark) {
@@ -12,8 +16,7 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
-        let items = photos
-    
+        let items = self.items
         let bar = Bar(main: self, items: items)
         addSubview(bar)
         
@@ -30,7 +33,7 @@ final class Main: NSView {
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
     }
     
-    private var photos: [Photo] {
+    private var items: [Photo] {
         var items = [Photo]()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
@@ -43,24 +46,33 @@ final class Main: NSView {
                     let bytes = (try? FileManager.default.attributesOfItem(atPath: url.path)).flatMap({ $0[.size] as? Int })
                 else { return }
                 
+                var date: Date?
+                var iso: Int?
+                
                 let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
                 guard
-                    let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject]
-//                    let exif = dictionary["{Exif}"] as? [String : AnyObject]
-//                    let width = dictionary["PixelWidth"] as? Int,
-//                    let height = dictionary["PixelHeight"] as? Int,
-//                    let rawDate = exif["DateTimeOriginal"] as? String,
-//                    let date = formatter.date(from: rawDate),
-//                    let isos = exif["ISOSpeedRatings"] as? [Int],
-//                    let iso = isos.first
+                    let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject],
+                    let width = dictionary["PixelWidth"] as? Int,
+                    let height = dictionary["PixelHeight"] as? Int
                 else { return }
                 
-                items.append(.init(url, date: .distantPast, iso: 1, size: .init(width: 1, height: 1), bytes: 0))
+                if let exif = dictionary["{Exif}"] as? [String : AnyObject] {
+                    if let rawDate = exif["DateTimeOriginal"] as? String {
+                        date = formatter.date(from: rawDate)
+                    }
+                    if let isos = exif["ISOSpeedRatings"] as? [Int] {
+                        iso = isos.first
+                    }
+                }
+                
+                if date == nil {
+                    date = (try? FileManager.default.attributesOfItem(atPath: url.path)).flatMap({ $0[.creationDate] as? Date })
+                }
+                
+                if let date = date {
+                    items.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
+                }
         }
         return items
-    }
-    
-    private func close() {
-        url?.stopAccessingSecurityScopedResource()
     }
 }

@@ -22,7 +22,7 @@ final class Export: NSPopover {
         contentViewController!.view.addSubview(title)
         
         let segmented = Segmented(items: sizes.map { "\(Int($0.width))×\(Int($0.height))" })
-        segmented.selected.value = widths.count / 2
+        segmented.selected.value = sizes.count / 2
         contentViewController!.view.addSubview(segmented)
         self.segmented = segmented
         
