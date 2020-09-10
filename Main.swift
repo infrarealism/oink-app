@@ -45,17 +45,17 @@ final class Main: NSView {
                 
                 let source = CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)
                 guard
-                    let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject],
-                    let exif = dictionary["{Exif}"] as? [String : AnyObject],
-                    let width = dictionary["PixelWidth"] as? Int,
-                    let height = dictionary["PixelHeight"] as? Int,
-                    let rawDate = exif["DateTimeOriginal"] as? String,
-                    let date = formatter.date(from: rawDate),
-                    let isos = exif["ISOSpeedRatings"] as? [Int],
-                    let iso = isos.first
+                    let dictionary = CGImageSourceCopyPropertiesAtIndex(source!, 0, nil) as? [String : AnyObject]
+//                    let exif = dictionary["{Exif}"] as? [String : AnyObject]
+//                    let width = dictionary["PixelWidth"] as? Int,
+//                    let height = dictionary["PixelHeight"] as? Int,
+//                    let rawDate = exif["DateTimeOriginal"] as? String,
+//                    let date = formatter.date(from: rawDate),
+//                    let isos = exif["ISOSpeedRatings"] as? [Int],
+//                    let iso = isos.first
                 else { return }
                 
-                items.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
+                items.append(.init(url, date: .distantPast, iso: 1, size: .init(width: 1, height: 1), bytes: 0))
         }
         return items
     }

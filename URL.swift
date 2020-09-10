@@ -5,7 +5,7 @@ extension URL {
         guard
             let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as CFString, nil)
         else { return "" }
-        let mime = uti.takeRetainedValue() as String
+        let mime = uti.takeUnretainedValue() as String
         uti.release()
         return mime
     }
