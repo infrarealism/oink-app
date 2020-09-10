@@ -2,16 +2,6 @@ import AppKit
 import Combine
 
 final class Grid: NSScrollView {
-    var items = [Photo]() {
-        didSet {
-            documentView!.subviews.forEach { $0.removeFromSuperview() }
-            queue = []
-            active = []
-            visible = .init(repeating: false, count: items.count)
-            refresh()
-        }
-    }
-    
     override var frame: NSRect {
         didSet {
             documentView!.frame.size.width = frame.width
@@ -27,13 +17,16 @@ final class Grid: NSScrollView {
     private var queue = Set<Cell>()
     private var active = Set<Cell>()
     private var positions = [CGPoint]()
-    private var visible = [Bool]()
     private var size = CGSize.zero
+    private var visible: [Bool]
     private let width = CGFloat(120)
+    private let items: [Photo]
     
     required init?(coder: NSCoder) { nil }
-    init(main: Main) {
+    init(main: Main, items: [Photo]) {
         self.main = main
+        self.items = items
+        visible = .init(repeating: false, count: items.count)
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         documentView = Content()

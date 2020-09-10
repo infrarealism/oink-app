@@ -12,10 +12,12 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
-        let bar = Bar(main: self)
+        let items = photos
+    
+        let bar = Bar(main: self, items: items)
         addSubview(bar)
         
-        let grid = Grid(main: self)
+        let grid = Grid(main: self, items: items.sorted { $0.date < $1.date })
         addSubview(grid)
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
@@ -26,8 +28,10 @@ final class Main: NSView {
         grid.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         grid.leftAnchor.constraint(equalTo: bar.rightAnchor).isActive = true
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
- 
-        var photos = [Photo]()
+    }
+    
+    private var photos: [Photo] {
+        var items = [Photo]()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
         
@@ -51,9 +55,9 @@ final class Main: NSView {
                     let iso = isos.first
                 else { return }
                 
-                photos.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
+                items.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
         }
-        grid.items = photos.sorted { $0.date < $1.date }
+        return items
     }
     
     private func close() {

@@ -4,7 +4,7 @@ final class Bar: NSVisualEffectView {
     private weak var main: Main!
     
     required init?(coder: NSCoder) { nil }
-    init(main: Main) {
+    init(main: Main, items: [Photo]) {
         self.main = main
         super.init(frame: .zero)
         wantsLayer = true
@@ -14,12 +14,24 @@ final class Bar: NSVisualEffectView {
         let separator = Separator()
         addSubview(separator)
         
+        let count = NumberFormatter()
+        count.numberStyle = .decimal
+        let bytes = ByteCountFormatter()
+        
+        let info = Label(count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes)), .systemFont(ofSize: 14, weight: .medium))
+        info.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        addSubview(info)
+        
         let close = Item(icon: "close", title: "Close")
         close.target = self
         close.action = #selector(self.close)
         addSubview(close)
         
         widthAnchor.constraint(equalToConstant: 180).isActive = true
+        
+        info.bottomAnchor.constraint(equalTo: close.topAnchor, constant: -20).isActive = true
+        info.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        info.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
         separator.topAnchor.constraint(equalTo: topAnchor).isActive = true
         separator.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
