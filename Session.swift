@@ -19,4 +19,9 @@ final class Session {
         store.add(bookmark)
         self.bookmark.send(bookmark)
     }
+    
+    func close() {
+        store.remove(Bookmark.self) { _ in true }
+        bookmark.send(nil)
+    }
 }

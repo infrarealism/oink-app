@@ -10,6 +10,7 @@
 		CE00140A25061B1500DEC8A3 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE00140925061B1500DEC8A3 /* Photo.swift */; };
 		CE0C6F2B2507875A0078B59A /* Control.Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6F2A2507875A0078B59A /* Control.Button.swift */; };
 		CE0C6F2D25078E3C0078B59A /* Display.Bar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0C6F2C25078E3C0078B59A /* Display.Bar.swift */; };
+		CE10FF11250A0F7A008C3F9D /* Bar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE10FF10250A0F7A008C3F9D /* Bar.swift */; };
 		CE12E2952507DC830010CF30 /* Control.Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12E2942507DC830010CF30 /* Control.Circle.swift */; };
 		CE16437F250665B500F2CF2B /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE16437E250665B500F2CF2B /* Display.swift */; };
 		CE2AC9F12508EAEE00AF620A /* Export.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2AC9F02508EAEE00AF620A /* Export.swift */; };
@@ -37,6 +38,7 @@
 		CE00140925061B1500DEC8A3 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		CE0C6F2A2507875A0078B59A /* Control.Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.Button.swift; sourceTree = "<group>"; };
 		CE0C6F2C25078E3C0078B59A /* Display.Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.Bar.swift; sourceTree = "<group>"; };
+		CE10FF10250A0F7A008C3F9D /* Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bar.swift; sourceTree = "<group>"; };
 		CE12E2942507DC830010CF30 /* Control.Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.Circle.swift; sourceTree = "<group>"; };
 		CE16437E250665B500F2CF2B /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
 		CE2AC9F02508EAEE00AF620A /* Export.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Export.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				CEEC549825023E9700B1CB99 /* Oink.entitlements */,
 				CEEC549725023E9700B1CB99 /* Info.plist */,
 				CE342DB52502727F0060C9E5 /* App.swift */,
+				CE10FF10250A0F7A008C3F9D /* Bar.swift */,
 				CE735F1E25025B940034D80E /* Bookmark.swift */,
 				CE735F15250254130034D80E /* Control.Blob.swift */,
 				CE0C6F2A2507875A0078B59A /* Control.Button.swift */,
@@ -190,6 +193,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE342DBA250277FE0060C9E5 /* Main.swift in Sources */,
+				CE10FF11250A0F7A008C3F9D /* Bar.swift in Sources */,
 				CE0C6F2D25078E3C0078B59A /* Display.Bar.swift in Sources */,
 				CE12E2952507DC830010CF30 /* Control.Circle.swift in Sources */,
 				CEEC54A12502418000B1CB99 /* Menu.swift in Sources */,
@@ -352,7 +356,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = Oink.Oink;
+				PRODUCT_BUNDLE_IDENTIFIER = oink.app;
 			};
 			name = Debug;
 		};
@@ -371,7 +375,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = Oink.Oink;
+				PRODUCT_BUNDLE_IDENTIFIER = oink.app;
 			};
 			name = Release;
 		};
