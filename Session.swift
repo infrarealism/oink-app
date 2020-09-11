@@ -8,8 +8,19 @@ final class Session {
     
     func load() {
         var sub: AnyCancellable?
-        sub = store.nodes(Bookmark.self).sink {
-            self.bookmark.send($0.first)
+        sub = store.nodes(Bookmark.self).sink { [weak self] in
+            if let bookmark = $0.first,
+                let access = bookmark.access {
+                    let remove = !FileManager.default.fileExists(atPath: access.path) || access.pathComponents.contains(".Trash")
+                    access.stopAccessingSecurityScopedResource()
+                    if remove {
+                        self?.close()
+                    } else {
+                        self?.bookmark.send(bookmark)
+                    }
+            } else {
+                self?.bookmark.send(nil)
+            }
             sub?.cancel()
         }
     }
