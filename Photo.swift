@@ -27,10 +27,13 @@ final class Photo {
         self.bytes = bytes
     }
     
-    func export(_ size: CGSize) -> Data {
+    func export(_ size: CGSize) -> Data? {
         let data = NSMutableData()
-        let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeJPEG, 1, nil)!
-        CGImageDestinationAddImage(destination, render(size: max(size.width, size.height), force: true)!, nil)
+        guard
+            let image = render(size: max(size.width, size.height), force: true),
+            let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeJPEG, 1, nil)
+        else { return nil }
+        CGImageDestinationAddImage(destination, image, nil)
         CGImageDestinationFinalize(destination)
         return data as Data
     }

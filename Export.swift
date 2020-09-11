@@ -58,8 +58,10 @@ final class Export: NSPopover {
         save.allowedFileTypes = ["jpg"]
         save.beginSheetModal(for: main.window!) {
             if $0 == .OK, let url = save.url {
-                try? main.item!.export(size).write(to: url, options: .atomic)
-                NSWorkspace.shared.activateFileViewerSelecting([url])
+                main.item!.export(size).map {
+                    try? $0.write(to: url, options: .atomic)
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                }
             }
         }
     }
