@@ -111,8 +111,6 @@ final class Grid: NSScrollView {
                 cell = queue.popFirst() ?? Cell()
                 cell.index = index
                 cell.item = items[index]
-                cell.contentsGravity = .resizeAspectFill
-                cell.masksToBounds = true
                 documentView!.layer!.addSublayer(cell)
                 active.insert(cell)
                 self.visible[index] = true

@@ -7,11 +7,11 @@ extension Grid {
                 guard let image = item?.thumb else { return }
                 contents = image
                 
-                let transition = CABasicAnimation(keyPath: "opacity")
-                transition.duration = 1
-                transition.timingFunction = .init(name: .easeOut)
-                transition.fromValue = 0
-                add(transition, forKey: "opacity")
+//                let transition = CABasicAnimation(keyPath: "opacity")
+//                transition.duration = 1
+//                transition.timingFunction = .init(name: .easeOut)
+//                transition.fromValue = 0
+//                add(transition, forKey: "opacity")
             }
         }
         
@@ -28,6 +28,13 @@ extension Grid {
         }
         
         var index = 0
+        
+        required init?(coder: NSCoder) { nil }
+        override init() {
+            super.init()
+            contentsGravity = .resizeAspectFill
+            masksToBounds = true
+        }
         
         override class func defaultAction(forKey event: String) -> CAAction? {
             switch event {
