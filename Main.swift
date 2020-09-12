@@ -4,7 +4,6 @@ final class Main: NSView {
     weak var item: Photo?
     private(set) weak var session: Session!
     let url: URL?
-    private weak var bar: Bar!
     
     deinit {
         url?.stopAccessingSecurityScopedResource()
@@ -19,24 +18,24 @@ final class Main: NSView {
         
         let bar = Bar(main: self)
         addSubview(bar)
-        self.bar = bar
+        
+        let grid = Grid(main: self)
+        addSubview(grid)
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bar.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         bar.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         
+        grid.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        grid.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        grid.leftAnchor.constraint(equalTo: bar.rightAnchor).isActive = true
+        grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let items = self?.items else { return }
+            guard let items = self?.items.sorted(by: { $0.date > $1.date }) else { return }
             DispatchQueue.main.async {
-                guard let self = self else { return }
                 bar.update(items)
-                let grid = Grid(main: self, items: items.sorted { $0.date > $1.date })
-                self.addSubview(grid)
-                
-                grid.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-                grid.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-                grid.leftAnchor.constraint(equalTo: bar.rightAnchor).isActive = true
-                grid.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
+                grid.items = items
             }
         }
     }
