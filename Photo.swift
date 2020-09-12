@@ -3,13 +3,13 @@ import Foundation
 final class Photo {
     var thumb: CGImage? {
         if _thumb == nil {
-            _thumb = render(size: 100, force: false)
+            _thumb = render(size: 200)
         }
         return _thumb
     }
     
     var image: CGImage? {
-        render(size: min(1024, min(size.width, size.height)), force: true)
+        render(size: min(1024, min(size.width, size.height)))
     }
     
     let url: URL
@@ -30,7 +30,7 @@ final class Photo {
     func export(_ size: CGSize) -> Data? {
         let data = NSMutableData()
         guard
-            let image = render(size: max(size.width, size.height), force: true),
+            let image = render(size: max(size.width, size.height)),
             let destination = CGImageDestinationCreateWithData(data as CFMutableData, kUTTypeJPEG, 1, nil)
         else { return nil }
         CGImageDestinationAddImage(destination, image, nil)
@@ -38,10 +38,9 @@ final class Photo {
         return data as Data
     }
     
-    private func render(size: CGFloat, force: Bool) -> CGImage? {
+    private func render(size: CGFloat) -> CGImage? {
         CGImageSourceCreateThumbnailAtIndex(CGImageSourceCreateWithURL(url as CFURL, [kCGImageSourceShouldCache : false] as CFDictionary)!, 0,
-                                            [kCGImageSourceCreateThumbnailFromImageAlways : force,
-                                             kCGImageSourceCreateThumbnailFromImageIfAbsent : true,
+                                            [kCGImageSourceCreateThumbnailFromImageAlways : true,
                                              kCGImageSourceThumbnailMaxPixelSize : size] as CFDictionary)
     }
 }

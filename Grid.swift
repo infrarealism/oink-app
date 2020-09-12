@@ -19,7 +19,7 @@ final class Grid: NSScrollView {
     private var positions = [CGPoint]()
     private var size = CGSize.zero
     private var visible: [Bool]
-    private let width = CGFloat(120)
+    private let width = CGFloat(240)
     private let items: [Photo]
     
     required init?(coder: NSCoder) { nil }

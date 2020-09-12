@@ -8,7 +8,7 @@ extension Grid {
                 
                 guard let image = item?.thumb else { return }
                 let layer = CALayer()
-                layer.frame = .init(x: -12, y: -12, width: self.layer!.frame.width + 24, height: self.layer!.frame.height + 24)
+                layer.frame = self.layer!.bounds
                 layer.contentsGravity = .resizeAspectFill
                 layer.contents = image
                 
@@ -39,6 +39,7 @@ extension Grid {
         init(_ size: CGSize) {
             super.init(frame: .init(origin: .zero, size: size))
             wantsLayer = true
+            layer?.masksToBounds = true
         }
     }
 }
