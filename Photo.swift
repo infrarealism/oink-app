@@ -3,7 +3,7 @@ import Foundation
 final class Photo {
     var thumb: CGImage? {
         if _thumb == nil {
-            _thumb = render(size: 200)
+            _thumb = render(size: 100)
         }
         return _thumb
     }
