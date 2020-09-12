@@ -1,17 +1,13 @@
 import AppKit
+import Combine
 
 extension Grid {
     final class Cell: CALayer {
         weak var item: Photo? {
             didSet {
-                guard let image = item?.thumb else { return }
-                contents = image
-                
-//                let transition = CABasicAnimation(keyPath: "opacity")
-//                transition.duration = 1
-//                transition.timingFunction = .init(name: .easeOut)
-//                transition.fromValue = 0
-//                add(transition, forKey: "opacity")
+                sub = item?.thumb.sink { [weak self] in
+                    self?.contents = $0
+                }
             }
         }
         
@@ -28,6 +24,7 @@ extension Grid {
         }
         
         var index = 0
+        private var sub: AnyCancellable?
         
         required init?(coder: NSCoder) { nil }
         override init() {
@@ -36,8 +33,8 @@ extension Grid {
             masksToBounds = true
         }
         
-        override class func defaultAction(forKey event: String) -> CAAction? {
-            switch event {
+        override class func defaultAction(forKey: String) -> CAAction? {
+            switch forKey {
             case "contents":
                 let transition = CABasicAnimation(keyPath: "opacity")
                 transition.duration = 1
