@@ -30,6 +30,7 @@ final class Grid: NSScrollView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         documentView = Content()
+        documentView!.wantsLayer = true
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
         
@@ -97,7 +98,7 @@ final class Grid: NSScrollView {
         visible.enumerated().filter { $0.1 }.forEach { index in
             guard !current.contains(index.0) else { return }
             let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
-            cell.removeFromSuperview()
+            cell.removeFromSuperlayer()
             cell.item = nil
             self.visible[index.0] = false
             queue.insert(cell)
@@ -107,10 +108,12 @@ final class Grid: NSScrollView {
             if visible[index] {
                 cell = active.first { $0.index == index }!
             } else {
-                cell = queue.popFirst() ?? Cell(size)
+                cell = queue.popFirst() ?? Cell()
                 cell.index = index
                 cell.item = items[index]
-                documentView!.addSubview(cell)
+                cell.contentsGravity = .resizeAspectFill
+                cell.masksToBounds = true
+                documentView!.layer!.addSublayer(cell)
                 active.insert(cell)
                 self.visible[index] = true
             }
