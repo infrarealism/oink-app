@@ -19,7 +19,8 @@ extension Control {
             layer!.backgroundColor = background.cgColor
             layer!.cornerRadius = 15
             
-            let label = Label(text, .systemFont(ofSize: 12, weight: .medium))
+            let label = Label(.systemFont(ofSize: 12, weight: .medium))
+            label.stringValue = text
             label.textColor = foreground
             addSubview(label)
             

@@ -18,7 +18,8 @@ final class Export: NSPopover {
         contentViewController = .init()
         contentViewController!.view = .init()
         
-        let title = Label("Resolution", .systemFont(ofSize: 16, weight: .bold))
+        let title = Label(.systemFont(ofSize: 16, weight: .bold))
+        title.stringValue = "Resolution"
         contentViewController!.view.addSubview(title)
         
         let segmented = Segmented(items: sizes.map { "\(Int($0.width))×\(Int($0.height))" })

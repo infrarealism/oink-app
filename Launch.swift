@@ -14,7 +14,8 @@ final class Launch: NSView {
         control.action = #selector(folder)
         addSubview(control)
         
-        let label = Label("Select your photos folder", .systemFont(ofSize: 14, weight: .medium))
+        let label = Label(.systemFont(ofSize: 14, weight: .medium))
+        label.stringValue = "Select your photos folder"
         addSubview(label)
         
         control.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

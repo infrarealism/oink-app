@@ -2,9 +2,10 @@ import AppKit
 
 final class Bar: NSVisualEffectView {
     private weak var main: Main!
+    private weak var info: Label!
     
     required init?(coder: NSCoder) { nil }
-    init(main: Main, items: [Photo]) {
+    init(main: Main) {
         self.main = main
         super.init(frame: .zero)
         wantsLayer = true
@@ -14,17 +15,15 @@ final class Bar: NSVisualEffectView {
         let separator = Separator()
         addSubview(separator)
         
-        let count = NumberFormatter()
-        count.numberStyle = .decimal
-        let bytes = ByteCountFormatter()
-        
-        let title = Label(main.url?.lastPathComponent ?? "", .systemFont(ofSize: 18, weight: .medium))
+        let title = Label(.systemFont(ofSize: 18, weight: .medium))
+        main.url.map { title.stringValue = $0.lastPathComponent }
         title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(title)
         
-        let info = Label(count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes)), .systemFont(ofSize: 14, weight: .regular))
+        let info = Label(.systemFont(ofSize: 14, weight: .regular))
         info.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(info)
+        self.info = info
         
         let close = Item(icon: "close", title: "Close")
         close.target = self
@@ -49,6 +48,14 @@ final class Bar: NSVisualEffectView {
         close.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
         close.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         close.rightAnchor.constraint(equalTo: rightAnchor, constant: -25).isActive = true
+    }
+    
+    func update(_ items: [Photo]) {
+        let count = NumberFormatter()
+        count.numberStyle = .decimal
+        let bytes = ByteCountFormatter()
+        
+        info.stringValue = count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes))
     }
     
     @objc private func close() {
@@ -83,7 +90,8 @@ private final class Item: Control {
         addSubview(icon)
         self.icon = icon
         
-        let label = Label(title, .systemFont(ofSize: 12, weight: .medium))
+        let label = Label(.systemFont(ofSize: 12, weight: .medium))
+        label.stringValue = title
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(label)
         self.label = label

@@ -76,7 +76,8 @@ private final class Item: Control {
     init(title: String) {
         super.init()
         
-        let label = Label(title, .systemFont(ofSize: 12, weight: .bold))
+        let label = Label(.systemFont(ofSize: 12, weight: .bold))
+        label.stringValue = title
         addSubview(label)
         
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
