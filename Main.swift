@@ -20,7 +20,7 @@ final class Main: NSView {
         let bar = Bar(main: self, items: items)
         addSubview(bar)
         
-        let grid = Grid(main: self, items: items.sorted { $0.date < $1.date })
+        let grid = Grid(main: self, items: items.sorted { $0.date > $1.date })
         addSubview(grid)
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
