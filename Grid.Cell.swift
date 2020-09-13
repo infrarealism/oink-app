@@ -1,10 +1,13 @@
 import AppKit
+import Combine
 
 extension Grid {
     final class Cell: CALayer {
         weak var item: Photo? {
             didSet {
-                contents = item?.thumb
+                sub = item?.thumb.receive(on: DispatchQueue.main).sink { [weak self] in
+                    self?.contents = $0
+                }
             }
         }
         
@@ -21,6 +24,7 @@ extension Grid {
         }
         
         var index = 0
+        private var sub: AnyCancellable?
         
         required init?(coder: NSCoder) { nil }
         override init() {

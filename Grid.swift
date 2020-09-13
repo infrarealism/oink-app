@@ -30,7 +30,6 @@ final class Grid: NSScrollView {
     private var size = CGSize.zero
     private var visible = [Bool]()
     private let width = CGFloat(120)
-    private let dispatch = DispatchQueue(label: "", qos: .utility, attributes: .concurrent)
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -118,9 +117,7 @@ final class Grid: NSScrollView {
             } else {
                 cell = queue.popFirst() ?? Cell()
                 cell.index = index
-                dispatch.async { [weak self] in
-                    cell.item = self?.items[index]
-                }
+                cell.item = items[index]
                 documentView!.layer!.addSublayer(cell)
                 active.insert(cell)
                 self.visible[index] = true
