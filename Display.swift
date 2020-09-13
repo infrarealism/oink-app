@@ -17,7 +17,7 @@ final class Display: NSView {
         
         let layer = CALayer()
         layer.contentsGravity = .resizeAspectFill
-        layer.contents = main.item!.thumb
+//        layer.contents = main.item!.thumb.value
         layer.backgroundColor = NSColor.controlBackgroundColor.cgColor
         self.layer = layer
         wantsLayer = true
@@ -45,7 +45,7 @@ final class Display: NSView {
         let transition = CABasicAnimation(keyPath: "contents")
         transition.duration = 0.3
         transition.timingFunction = .init(name: .easeOut)
-        layer!.contents = main.item!.image
+//        layer!.contents = main.item!.image
         layer!.add(transition, forKey: "contents")
         
         bar.top.constant = 0
@@ -69,7 +69,7 @@ final class Display: NSView {
             $0.allowsImplicitAnimation = true
             superview!.layoutSubtreeIfNeeded()
         }) { [weak self] in
-            self?.main.item = nil
+//            self?.main.item = nil
             self?.removeFromSuperview()
         }
     }

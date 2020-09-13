@@ -23,10 +23,10 @@ extension Display {
             date.timeStyle = .short
             let bytes = ByteCountFormatter()
             
-            let title = main.item!.url.lastPathComponent + " - " + date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)) + (main.item!.iso == nil ? "" : " - ISO \(main.item!.iso!)")
+//            let title = main.item!.url.lastPathComponent + " - " + date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)) + (main.item!.iso == nil ? "" : " - ISO \(main.item!.iso!)")
             
             let label = Label(.systemFont(ofSize: 13, weight: .regular))
-            label.stringValue = title
+//            label.stringValue = title
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             addSubview(label)
             
@@ -48,7 +48,8 @@ extension Display {
         }
         
         @objc private func share(_ button: Control.Circle) {
-            let export = Export(main: main)
+            guard let item = main.cell.value?.item else { return }
+            let export = Export(item: item)
             export.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }

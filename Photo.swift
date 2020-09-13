@@ -19,8 +19,6 @@ final class Photo {
         self.iso = iso
         self.size = size
         self.bytes = bytes
-        
-        
     }
     
     var thumb: CurrentValueSubject<CGImage?, Never> {

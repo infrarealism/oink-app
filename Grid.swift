@@ -51,11 +51,11 @@ final class Grid: NSScrollView {
     }
     
     override func mouseUp(with: NSEvent) {
-        guard main.item == nil else { return }
+        guard main.cell.value == nil else { return }
         
         active.filter { $0.highlighted }.forEach { $0.highlighted = false }
         guard let cell = cell(with) else { return }
-        main.item = cell.item
+        main.cell.value = cell
         
         let display = Display(main: main)
         display.translatesAutoresizingMaskIntoConstraints = false

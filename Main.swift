@@ -1,18 +1,16 @@
 import AppKit
+import Combine
 
 final class Main: NSView {
-    weak var item: Photo?
     private(set) weak var session: Session!
-    let url: URL?
-    
-    deinit {
-        url?.stopAccessingSecurityScopedResource()
-    }
+    let cell = CurrentValueSubject<Grid.Cell?, Never>(nil)
+    let items = CurrentValueSubject<[Photo], Never>([])
+    let url: URL
     
     required init?(coder: NSCoder) { nil }
-    init(session: Session, bookmark: Bookmark) {
+    init(session: Session, url: URL) {
         self.session = session
-        url = bookmark.access
+        self.url = url
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -32,20 +30,20 @@ final class Main: NSView {
         grid.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         
         DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let items = self?.items.sorted(by: { $0.date > $1.date }) else { return }
-            DispatchQueue.main.async {
-                bar.update(items)
-                grid.items = items
-            }
+            self?.load()
         }
     }
     
-    private var items: [Photo] {
+    deinit {
+        url.stopAccessingSecurityScopedResource()
+    }
+    
+    private func load() {
         var items = [Photo]()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
         
-        FileManager.default.enumerator(at: url!, includingPropertiesForKeys: nil, options:
+        FileManager.default.enumerator(at: url, includingPropertiesForKeys: nil, options:
             [.producesRelativePathURLs, .skipsHiddenFiles, .skipsPackageDescendants])?.forEach {
                 guard
                     let url = $0 as? URL,
@@ -80,6 +78,6 @@ final class Main: NSView {
                     items.append(.init(url, date: date, iso: iso, size: .init(width: width, height: height), bytes: bytes))
                 }
         }
-        return items
+        self.items.value = items.sorted { $0.date > $1.date }
     }
 }

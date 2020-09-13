@@ -16,7 +16,7 @@ final class Bar: NSVisualEffectView {
         addSubview(separator)
         
         let title = Label(.systemFont(ofSize: 18, weight: .medium))
-        main.url.map { title.stringValue = $0.lastPathComponent }
+        title.stringValue = main.url.lastPathComponent
         title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(title)
         

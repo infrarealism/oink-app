@@ -1,17 +1,17 @@
 import AppKit
 
 final class Export: NSPopover {
-    private weak var main: Main!
+    private weak var item: Photo!
     private weak var segmented: Segmented!
     private let sizes: [CGSize]
     private let widths = [CGFloat(320), 640, 1024, 1400]
     
     required init?(coder: NSCoder) { nil }
-    init(main: Main) {
-        sizes = (widths.filter { $0 < main.item!.size.width } + [main.item!.size.width]).map {
-            .init(width: $0, height: ceil($0 / main.item!.size.width * main.item!.size.height))
+    init(item: Photo) {
+        sizes = (widths.filter { $0 < item.size.width } + [item.size.width]).map {
+            .init(width: $0, height: ceil($0 / item.size.width * item.size.height))
         }
-        self.main = main
+        self.item = item
         super.init()
         behavior = .transient
         contentSize = .init(width: 700, height: 260)
@@ -53,13 +53,13 @@ final class Export: NSPopover {
     
     @objc private func save() {
         let size = sizes[segmented.selected.value]
-        let main = self.main!
+        let item = self.item!
         let save = NSSavePanel()
-        save.nameFieldStringValue = main.item!.url.lastPathComponent
+        save.nameFieldStringValue = item.url.lastPathComponent
         save.allowedFileTypes = ["jpg"]
-        save.beginSheetModal(for: main.window!) {
+        save.beginSheetModal(for: NSApp.windows.first!) {
             if $0 == .OK, let url = save.url {
-                main.item!.export(size).map {
+                item.export(size).map {
                     try? $0.write(to: url, options: .atomic)
                     NSWorkspace.shared.activateFileViewerSelecting([url])
                 }

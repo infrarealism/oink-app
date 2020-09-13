@@ -49,7 +49,8 @@ final class Window: NSWindow {
     private func main(_ bookmark: Bookmark) {
         contentView!.subviews.forEach { $0.removeFromSuperview() }
         
-        let main = Main(session: session, bookmark: bookmark)
+        guard let url = bookmark.access else { return }
+        let main = Main(session: session, url: url)
         contentView!.addSubview(main)
         
         main.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
