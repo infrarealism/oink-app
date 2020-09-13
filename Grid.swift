@@ -47,15 +47,14 @@ final class Grid: NSScrollView {
     }
     
     override func mouseDown(with: NSEvent) {
-        guard main.item == nil, let cell = hitTest(with.locationInWindow) as? Grid.Cell else { return }
-        cell.highlighted = true
+        cell(with)?.highlighted = true
     }
     
     override func mouseUp(with: NSEvent) {
         guard main.item == nil else { return }
         
         active.filter { $0.highlighted }.forEach { $0.highlighted = false }
-        guard let cell = hitTest(with.locationInWindow) as? Grid.Cell else { return }
+        guard let cell = cell(with) else { return }
         main.item = cell.item
         
         let display = Display(main: main)
@@ -132,6 +131,12 @@ final class Grid: NSScrollView {
         return .init((0 ..< items.count).filter {
             positions[$0].y > min && positions[$0].y < max
         })
+    }
+    
+    private func cell(_ with: NSEvent) -> Cell? {
+        positions.map { CGRect(origin: $0, size: size) }.firstIndex { $0.contains(documentView!.convert(with.locationInWindow, from: nil)) }.flatMap { index in
+            active.first { $0.index == index }
+        }
     }
 }
 

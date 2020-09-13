@@ -7,19 +7,22 @@ extension Grid {
             didSet {
                 sub = item?.thumb.receive(on: DispatchQueue.main).sink { [weak self] in
                     self?.contents = $0
+                    if $0 != nil {
+                        self?.sub?.cancel()
+                    }
                 }
             }
         }
         
         var highlighted = false {
             didSet {
-//                layer!.borderWidth = highlighted ? 3 : 0
-//                layer!.borderColor = NSColor.systemIndigo.cgColor
-//
-//                let transition = CABasicAnimation(keyPath: "borderWidth")
-//                transition.duration = 0.3
-//                transition.timingFunction = .init(name: .easeOut)
-//                layer!.add(transition, forKey: "borderWidth")
+                borderWidth = highlighted ? 3 : 0
+                borderColor = NSColor.systemIndigo.cgColor
+
+                let transition = CABasicAnimation(keyPath: "borderWidth")
+                transition.duration = 0.3
+                transition.timingFunction = .init(name: .easeOut)
+                add(transition, forKey: "borderWidth")
             }
         }
         
