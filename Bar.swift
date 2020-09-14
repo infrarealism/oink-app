@@ -1,8 +1,10 @@
 import AppKit
+import Combine
 
 final class Bar: NSVisualEffectView {
     private weak var main: Main!
     private weak var info: Label!
+    private var sub: AnyCancellable?
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -15,12 +17,12 @@ final class Bar: NSVisualEffectView {
         let separator = Separator()
         addSubview(separator)
         
-        let title = Label(.systemFont(ofSize: 18, weight: .medium))
+        let title = Label(.systemFont(ofSize: 16, weight: .medium))
         title.stringValue = main.url.lastPathComponent
         title.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(title)
         
-        let info = Label(.systemFont(ofSize: 14, weight: .regular))
+        let info = Label(.systemFont(ofSize: 12, weight: .regular))
         info.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(info)
         self.info = info
@@ -48,12 +50,22 @@ final class Bar: NSVisualEffectView {
         close.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
         close.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         close.rightAnchor.constraint(equalTo: rightAnchor, constant: -25).isActive = true
+        
+        sub = main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] in
+            self?.update($0)
+        }
     }
     
     func update(_ items: [Photo]) {
         let count = NumberFormatter()
         count.numberStyle = .decimal
         let bytes = ByteCountFormatter()
+        
+        let transition = CATransition()
+        transition.timingFunction = .init(name: .easeInEaseOut)
+        transition.type = .fade
+        transition.duration = 1
+        info.layer!.add(transition, forKey: "transition")
         
         info.stringValue = count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes))
     }
