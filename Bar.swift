@@ -7,6 +7,8 @@ final class Bar: NSVisualEffectView {
     private weak var image: Label!
     private weak var specs: Label!
     private weak var date: Label!
+    private weak var grid: Item!
+    private weak var separator: Separator!
     private var subs = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) { nil }
@@ -28,7 +30,9 @@ final class Bar: NSVisualEffectView {
         self.items = items
         
         let separator = Separator()
+        separator.alphaValue = 0
         addSubview(separator)
+        self.separator = separator
         
         let image = Label(.systemFont(ofSize: 18, weight: .medium))
         image.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -45,12 +49,19 @@ final class Bar: NSVisualEffectView {
         addSubview(date)
         self.date = date
         
+        let grid = Item(icon: "grid", title: "View all")
+        grid.target = self
+        grid.action = #selector(viewAll)
+        grid.alphaValue = 0
+        addSubview(grid)
+        self.grid = grid
+        
         let close = Item(icon: "close", title: "Close")
         close.target = self
         close.action = #selector(self.close)
         addSubview(close)
         
-        widthAnchor.constraint(equalToConstant: 250).isActive = true
+        widthAnchor.constraint(equalToConstant: 220).isActive = true
         
         folder.topAnchor.constraint(equalTo: topAnchor, constant: 40).isActive = true
         folder.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
@@ -77,9 +88,13 @@ final class Bar: NSVisualEffectView {
         date.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         date.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
+        grid.topAnchor.constraint(equalTo: specs.bottomAnchor, constant: 30).isActive = true
+        grid.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+        grid.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+        
         close.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
-        close.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-        close.rightAnchor.constraint(equalTo: rightAnchor, constant: -25).isActive = true
+        close.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
+        close.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
         
         main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] in
             self?.update($0)
@@ -113,17 +128,33 @@ final class Bar: NSVisualEffectView {
         
         let bytes = ByteCountFormatter()
         
-        let transition = CATransition()
-        transition.timingFunction = .init(name: .easeInEaseOut)
-        transition.type = .fade
-        transition.duration = 1
-        image.layer!.add(transition, forKey: "transition")
-        specs.layer!.add(transition, forKey: "transition")
-        date.layer!.add(transition, forKey: "transition")
-        
         image.stringValue = item.url.lastPathComponent
         specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
         date.stringValue = format.string(from: item.date)
+        
+        NSAnimationContext.runAnimationGroup {
+            $0.duration = 0.5
+            $0.allowsImplicitAnimation = true
+            separator.alphaValue = 1
+            grid.alphaValue = 1
+            image.alphaValue = 1
+            specs.alphaValue = 1
+            date.alphaValue = 1
+        }
+    }
+    
+    @objc private func viewAll() {
+        main.clear()
+        
+        NSAnimationContext.runAnimationGroup {
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            separator.alphaValue = 0
+            grid.alphaValue = 0
+            image.alphaValue = 0
+            specs.alphaValue = 0
+            date.alphaValue = 0
+        }
     }
     
     @objc private func close() {
@@ -158,30 +189,30 @@ private final class Item: Control {
         addSubview(icon)
         self.icon = icon
         
-        let label = Label(.systemFont(ofSize: 12, weight: .medium))
+        let label = Label(.systemFont(ofSize: 14, weight: .medium))
         label.stringValue = title
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(label)
         self.label = label
         
-        bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 8).isActive = true
+        bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
         
-        icon.leftAnchor.constraint(equalTo: leftAnchor, constant: 11).isActive = true
+        icon.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 5).isActive = true
-        label.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
-        label.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -11).isActive = true
+        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 10).isActive = true
+        label.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        label.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -15).isActive = true
         hoverOff()
     }
     
-    override func hoverOn() {
+    override func hoverOff() {
         label.textColor = .labelColor
-        icon.contentTintColor = .secondaryLabelColor
+        icon.contentTintColor = .labelColor
         layer!.backgroundColor = .clear
     }
     
-    override func hoverOff() {
+    override func hoverOn() {
         label.textColor = .controlBackgroundColor
         icon.contentTintColor = .controlBackgroundColor
         layer!.backgroundColor = NSColor.labelColor.cgColor

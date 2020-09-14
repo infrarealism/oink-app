@@ -12,12 +12,12 @@ final class Grid: NSScrollView {
         }
     }
     
+    private(set) var positions = [CGPoint]()
+    private(set) var size = CGSize.zero
     private weak var main: Main!
     private var subs = Set<AnyCancellable>()
     private var queue = Set<Cell>()
     private var active = Set<Cell>()
-    private var positions = [CGPoint]()
-    private var size = CGSize.zero
     private var visible = [Bool]()
     private let width = CGFloat(120)
     

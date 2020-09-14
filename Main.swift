@@ -41,7 +41,12 @@ final class Main: NSView {
     func select(_ cell: Grid.Cell) {
         cell.removeFromSuperlayer()
         grid.documentView!.layer!.addSublayer(cell)
-        cell.update(.init(x: 0, y: -grid.contentView.bounds.minY, width: grid.frame.width, height: grid.frame.height))
+        cell.update(.init(x: 0, y: grid.contentView.bounds.minY, width: grid.frame.width, height: grid.frame.height))
         self.cell.value = cell
+    }
+    
+    func clear() {
+        cell.value!.update(.init(origin: grid.positions[cell.value!.index], size: grid.size))
+        cell.value = nil
     }
 }
