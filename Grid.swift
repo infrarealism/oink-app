@@ -2,16 +2,6 @@ import AppKit
 import Combine
 
 final class Grid: NSScrollView {
-    var items = [Photo]() {
-        didSet {
-            documentView!.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
-            queue = []
-            active = []
-            visible = .init(repeating: false, count: items.count)
-            refresh()
-        }
-    }
-    
     override var frame: NSRect {
         didSet {
             documentView!.frame.size.width = frame.width
@@ -44,17 +34,33 @@ final class Grid: NSScrollView {
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
             self?.refresh()
         }.store(in: &subs)
-    }
-    
-    override func mouseDown(with: NSEvent) {
-        cell(with)?.highlighted = true
+        
+        main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] in
+            self?.documentView!.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
+            self?.queue = []
+            self?.active = []
+            self?.visible = .init(repeating: false, count: $0.count)
+            self?.refresh()
+        }.store(in: &subs)
     }
     
     override func mouseUp(with: NSEvent) {
         guard main.cell.value == nil else { return }
         
-        active.filter { $0.highlighted }.forEach { $0.highlighted = false }
         guard let cell = cell(with) else { return }
+        
+        cell.removeFromSuperlayer()
+        documentView!.layer!.addSublayer(cell)
+//        let transition = CABasicAnimation(keyPath: "position")
+//        transition.duration = 1
+//        transition.timingFunction = .init(name: .easeOut)
+        cell.update(.init(x: 0, y: -contentView.bounds.minY, width: contentView.bounds.width, height: contentView.bounds.height))
+//        cell.add(transition, forKey: "position")
+        
+        
+        
+        
+        return;
         main.cell.value = cell
         
         let display = Display(main: main)
@@ -87,7 +93,7 @@ final class Grid: NSScrollView {
     private func updatePositions() {
         var positions = [CGPoint]()
         var current = CGPoint(x: -size.width, y: 0)
-        (0 ..< items.count).forEach { _ in
+        (0 ..< main.items.value.count).forEach { _ in
             current.x += size.width
             if current.x + size.width > bounds.width {
                 current = .init(x: 0, y: current.y + size.height)
@@ -116,7 +122,7 @@ final class Grid: NSScrollView {
             } else {
                 cell = queue.popFirst() ?? Cell()
                 cell.index = index
-                cell.item = items[index]
+                cell.item = main.items.value[index]
                 documentView!.layer!.addSublayer(cell)
                 active.insert(cell)
                 self.visible[index] = true
@@ -128,7 +134,7 @@ final class Grid: NSScrollView {
     private var current: Set<Int> {
         let min = contentView.bounds.minY - size.height
         let max = contentView.bounds.maxY + 1
-        return .init((0 ..< items.count).filter {
+        return .init((0 ..< main.items.value.count).filter {
             positions[$0].y > min && positions[$0].y < max
         })
     }

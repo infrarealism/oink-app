@@ -14,18 +14,6 @@ extension Grid {
             }
         }
         
-        var highlighted = false {
-            didSet {
-                borderWidth = highlighted ? 3 : 0
-                borderColor = NSColor.systemIndigo.cgColor
-
-                let transition = CABasicAnimation(keyPath: "borderWidth")
-                transition.duration = 0.3
-                transition.timingFunction = .init(name: .easeOut)
-                add(transition, forKey: "borderWidth")
-            }
-        }
-        
         var index = 0
         private var sub: AnyCancellable?
         
@@ -34,6 +22,16 @@ extension Grid {
             super.init()
             contentsGravity = .resizeAspectFill
             masksToBounds = true
+        }
+        
+        func update(_ frame: CGRect) {
+            ["bounds", "position"].forEach {
+                let transition = CABasicAnimation(keyPath: $0)
+                transition.duration = 0.35
+                transition.timingFunction = .init(name: .easeOut)
+                add(transition, forKey: $0)
+            }
+            self.frame = frame
         }
         
         override class func defaultAction(forKey: String) -> CAAction? {
