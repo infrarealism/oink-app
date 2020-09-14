@@ -47,42 +47,38 @@ final class Grid: NSScrollView {
     override func mouseUp(with: NSEvent) {
         guard main.cell.value == nil else { return }
         
-        guard let cell = cell(with) else { return }
+        cell(with).map(main.select)
         
-        cell.removeFromSuperlayer()
-        documentView!.layer!.addSublayer(cell)
-//        let transition = CABasicAnimation(keyPath: "position")
-//        transition.duration = 1
-//        transition.timingFunction = .init(name: .easeOut)
-        cell.update(.init(x: 0, y: -contentView.bounds.minY, width: contentView.bounds.width, height: contentView.bounds.height))
-//        cell.add(transition, forKey: "position")
+//        guard let cell = cell(with) else { return }
         
         
         
         
-        return;
-        main.cell.value = cell
         
-        let display = Display(main: main)
-        display.translatesAutoresizingMaskIntoConstraints = false
-        main.addSubview(display)
         
-        display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
-        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: (cell.frame.maxY - contentView.bounds.minY) - frame.height)
-        display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
-        display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
-        main.layoutSubtreeIfNeeded()
-
-        DispatchQueue.main.async { [weak self] in
-            display.big()
-            NSAnimationContext.runAnimationGroup({
-                $0.duration = 0.4
-                $0.allowsImplicitAnimation = true
-                self?.main.layoutSubtreeIfNeeded()
-            }) {
-                display.open()
-            }
-        }
+//        return;
+//        main.cell.value = cell
+//        
+//        let display = Display(main: main)
+//        display.translatesAutoresizingMaskIntoConstraints = false
+//        main.addSubview(display)
+//        
+//        display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
+//        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: (cell.frame.maxY - contentView.bounds.minY) - frame.height)
+//        display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
+//        display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
+//        main.layoutSubtreeIfNeeded()
+//
+//        DispatchQueue.main.async { [weak self] in
+//            display.big()
+//            NSAnimationContext.runAnimationGroup({
+//                $0.duration = 0.4
+//                $0.allowsImplicitAnimation = true
+//                self?.main.layoutSubtreeIfNeeded()
+//            }) {
+//                display.open()
+//            }
+//        }
     }
     
     private func refresh() {

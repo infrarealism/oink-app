@@ -18,10 +18,7 @@ extension Display {
             addSubview(close)
             self.close = close
             
-            let date = DateFormatter()
-            date.dateStyle = .full
-            date.timeStyle = .short
-            let bytes = ByteCountFormatter()
+            
             
 //            let title = main.item!.url.lastPathComponent + " - " + date.string(from: main.item!.date) + " - \(Int(main.item!.size.width))×\(Int(main.item!.size.height)) - " + bytes.string(from: .init(value: .init(main.item!.bytes), unit: .bytes)) + (main.item!.iso == nil ? "" : " - ISO \(main.item!.iso!)")
             

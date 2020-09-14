@@ -19,14 +19,13 @@ final class Window: NSWindow {
         center()
         setFrameAutosaveName("Window")
         
-        session.bookmark.sink {
+        session.bookmark.sink { [weak self] in
             if let bookmark = $0 {
-                self.main(bookmark)
+                self?.main(bookmark)
             } else {
-                self.launch()
+                self?.launch()
             }
         }.store(in: &subs)
-        session.load()
     }
     
     override func close() {
@@ -34,10 +33,20 @@ final class Window: NSWindow {
         NSApp.terminate(nil)
     }
     
+    func clear() {
+        session.close()
+        launch()
+    }
+    
+    func create(_ bookmark: Bookmark) {
+        session.update(bookmark)
+        main(bookmark)
+    }
+    
     private func launch() {
         contentView!.subviews.forEach { $0.removeFromSuperview() }
         
-        let launch = Launch(session: session)
+        let launch = Launch()
         contentView!.addSubview(launch)
         
         launch.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true
@@ -50,7 +59,7 @@ final class Window: NSWindow {
         contentView!.subviews.forEach { $0.removeFromSuperview() }
         
         guard let url = bookmark.access else { return }
-        let main = Main(session: session, url: url)
+        let main = Main(url: url)
         contentView!.addSubview(main)
         
         main.topAnchor.constraint(equalTo: contentView!.topAnchor).isActive = true

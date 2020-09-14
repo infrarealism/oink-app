@@ -1,11 +1,8 @@
 import AppKit
 
 final class Launch: NSView {
-    private weak var session: Session!
-    
     required init?(coder: NSCoder) { nil }
-    init(session: Session) {
-        self.session = session
+    init() {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
@@ -30,9 +27,9 @@ final class Launch: NSView {
         browse.canChooseFiles = false
         browse.canChooseDirectories = true
         browse.prompt = "Select"
-        browse.beginSheetModal(for: window!) { [weak self] in
+        browse.beginSheetModal(for: window!) {
             guard $0 == .OK else { return }
-            self?.session.update(.init(browse.url!))
+            (NSApp.windows.first as! Window).create(.init(browse.url!))
         }
     }
 }
