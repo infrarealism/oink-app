@@ -11,6 +11,9 @@ final class Bar: NSVisualEffectView {
     private weak var separator: Separator!
     private var subs = Set<AnyCancellable>()
     private let transition = CATransition()
+    private let bytes = ByteCountFormatter()
+    private let count = NumberFormatter()
+    private let format = DateFormatter()
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -24,6 +27,10 @@ final class Bar: NSVisualEffectView {
         transition.type = .moveIn
         transition.subtype = .fromTop
         transition.duration = 1
+        
+        count.numberStyle = .decimal
+        format.dateStyle = .full
+        format.timeStyle = .short
         
         let folder = Label(.systemFont(ofSize: 18, weight: .medium))
         folder.stringValue = main.url.lastPathComponent
@@ -114,22 +121,11 @@ final class Bar: NSVisualEffectView {
     }
     
     private func update(_ items: [Photo]) {
-        let count = NumberFormatter()
-        count.numberStyle = .decimal
-        let bytes = ByteCountFormatter()
-        
         self.items.layer!.add(transition, forKey: "transition")
-        
         self.items.stringValue = count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes))
     }
     
     private func update(_ item: Photo) {
-        let format = DateFormatter()
-        format.dateStyle = .full
-        format.timeStyle = .short
-        
-        let bytes = ByteCountFormatter()
-        
         image.stringValue = item.url.lastPathComponent
         specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
         date.stringValue = format.string(from: item.date)
@@ -161,62 +157,5 @@ final class Bar: NSVisualEffectView {
     
     @objc private func close() {
         (NSApp.windows.first as! Window).clear()
-    }
-}
-
-private final class Item: Control {
-    override var enabled: Bool {
-        didSet {
-            if enabled {
-                hoverOff()
-            } else {
-                hoverOn()
-            }
-        }
-    }
-    
-    private weak var icon: NSImageView!
-    private weak var label: Label!
-    private weak var blur: NSVisualEffectView!
-    
-    required init?(coder: NSCoder) { nil }
-    init(icon: String, title: String) {
-        super.init()
-        wantsLayer = true
-        layer!.cornerRadius = 6
-        
-        let icon = NSImageView(image: NSImage(named: icon)!)
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.imageScaling = .scaleNone
-        addSubview(icon)
-        self.icon = icon
-        
-        let label = Label(.systemFont(ofSize: 14, weight: .medium))
-        label.stringValue = title
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        addSubview(label)
-        self.label = label
-        
-        bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
-        
-        icon.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
-        icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        
-        label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 10).isActive = true
-        label.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        label.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -15).isActive = true
-        hoverOff()
-    }
-    
-    override func hoverOff() {
-        label.textColor = .labelColor
-        icon.contentTintColor = .labelColor
-        layer!.backgroundColor = .clear
-    }
-    
-    override func hoverOn() {
-        label.textColor = .controlBackgroundColor
-        icon.contentTintColor = .controlBackgroundColor
-        layer!.backgroundColor = NSColor.labelColor.cgColor
     }
 }

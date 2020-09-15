@@ -47,7 +47,5 @@ extension Grid {
             $0.fromValue = 0
             return $0
         } (CABasicAnimation(keyPath: "opacity"))
-        
-        
     }
 }
