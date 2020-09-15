@@ -2,7 +2,8 @@ import AppKit
 import Combine
 
 final class Main: NSView {
-    let cell = CurrentValueSubject<Grid.Cell?, Never>(nil)
+    let zoom = CurrentValueSubject<Bool, Never>(false)
+    let index = CurrentValueSubject<Int?, Never>(nil)
     let items = CurrentValueSubject<[Photo], Never>([])
     let url: URL
     private weak var grid: Grid!
@@ -36,17 +37,5 @@ final class Main: NSView {
     
     deinit {
         url.stopAccessingSecurityScopedResource()
-    }
-    
-    func select(_ cell: Grid.Cell) {
-        cell.removeFromSuperlayer()
-        grid.documentView!.layer!.addSublayer(cell)
-        cell.update(.init(x: 0, y: grid.contentView.bounds.minY, width: grid.frame.width, height: grid.frame.height))
-        self.cell.value = cell
-    }
-    
-    func clear() {
-        cell.value!.update(.init(origin: grid.positions[cell.value!.index], size: grid.size))
-        cell.value = nil
     }
 }

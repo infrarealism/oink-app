@@ -27,7 +27,7 @@ extension Grid {
         func update(_ frame: CGRect) {
             ["bounds", "position"].forEach {
                 let transition = CABasicAnimation(keyPath: $0)
-                transition.duration = 0.35
+                transition.duration = 0.3
                 transition.timingFunction = .init(name: .easeOut)
                 add(transition, forKey: $0)
             }
@@ -42,7 +42,7 @@ extension Grid {
         }
         
         private static var opacity: CABasicAnimation = {
-            $0.duration = 1
+            $0.duration = 0.6
             $0.timingFunction = .init(name: .easeOut)
             $0.fromValue = 0
             return $0

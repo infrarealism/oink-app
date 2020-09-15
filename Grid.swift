@@ -14,6 +14,7 @@ final class Grid: NSScrollView {
     
     private(set) var positions = [CGPoint]()
     private(set) var size = CGSize.zero
+    private weak var zoomed: Cell?
     private weak var main: Main!
     private var subs = Set<AnyCancellable>()
     private var queue = Set<Cell>()
@@ -25,9 +26,10 @@ final class Grid: NSScrollView {
     init(main: Main) {
         self.main = main
         super.init(frame: .zero)
+        let content = Content()
+        content.wantsLayer = true
         translatesAutoresizingMaskIntoConstraints = false
-        documentView = Content()
-        documentView!.wantsLayer = true
+        documentView = content
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
         
@@ -36,57 +38,42 @@ final class Grid: NSScrollView {
         }.store(in: &subs)
         
         main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] in
-            self?.documentView!.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
+            content.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
             self?.queue = []
             self?.active = []
             self?.visible = .init(repeating: false, count: $0.count)
             self?.refresh()
         }.store(in: &subs)
+        
+        main.index.dropFirst().sink { [weak self] in
+            guard let self = self else { return }
+            if let zoomed = self.zoomed {
+                zoomed.update(.init(origin: self.positions[zoomed.index], size: self.size))
+            }
+            if let index = $0 {
+                let zoomed = self.cell(index)
+                content.layer!.bringFront(zoomed)
+                zoomed.update(.init(x: 0, y: self.contentView.bounds.minY, width: self.frame.width, height: self.frame.height))
+                self.zoomed = zoomed
+            }
+        }.store(in: &subs)
     }
     
     override func mouseUp(with: NSEvent) {
-        guard main.cell.value == nil else { return }
-        
-        cell(with).map(main.select)
-        
-//        guard let cell = cell(with) else { return }
-        
-        
-        
-        
-        
-        
-//        return;
-//        main.cell.value = cell
-//        
-//        let display = Display(main: main)
-//        display.translatesAutoresizingMaskIntoConstraints = false
-//        main.addSubview(display)
-//        
-//        display.top = display.topAnchor.constraint(equalTo: topAnchor, constant: cell.frame.minY - contentView.bounds.minY)
-//        display.bottom = display.bottomAnchor.constraint(equalTo: bottomAnchor, constant: (cell.frame.maxY - contentView.bounds.minY) - frame.height)
-//        display.left = display.leftAnchor.constraint(equalTo: leftAnchor, constant: cell.frame.minX)
-//        display.right = display.rightAnchor.constraint(equalTo: rightAnchor, constant: cell.frame.maxX - frame.width)
-//        main.layoutSubtreeIfNeeded()
-//
-//        DispatchQueue.main.async { [weak self] in
-//            display.big()
-//            NSAnimationContext.runAnimationGroup({
-//                $0.duration = 0.4
-//                $0.allowsImplicitAnimation = true
-//                self?.main.layoutSubtreeIfNeeded()
-//            }) {
-//                display.open()
-//            }
-//        }
+        guard
+            !main.zoom.value,
+            let index = cell(with)?.index
+        else { return }
+        main.zoom.value = true
+        main.index.value = index
     }
     
     private func refresh() {
-        updatePositions()
+        reposition()
         render()
     }
     
-    private func updatePositions() {
+    private func reposition() {
         var positions = [CGPoint]()
         var current = CGPoint(x: -size.width, y: 0)
         (0 ..< main.items.value.count).forEach { _ in
@@ -111,19 +98,9 @@ final class Grid: NSScrollView {
             self.visible[index.0] = false
             queue.insert(cell)
         }
-        current.forEach { index in
-            let cell: Cell
-            if visible[index] {
-                cell = active.first { $0.index == index }!
-            } else {
-                cell = queue.popFirst() ?? Cell()
-                cell.index = index
-                cell.item = main.items.value[index]
-                documentView!.layer!.addSublayer(cell)
-                active.insert(cell)
-                self.visible[index] = true
-            }
-            cell.frame = .init(origin: positions[index], size: size)
+        current.forEach {
+            let item = cell($0)
+            item.frame = .init(origin: positions[$0], size: size)
         }
     }
     
@@ -133,6 +110,19 @@ final class Grid: NSScrollView {
         return .init((0 ..< main.items.value.count).filter {
             positions[$0].y > min && positions[$0].y < max
         })
+    }
+    
+    private func cell(_ index: Int) -> Cell {
+        guard visible[index] else {
+            let cell = queue.popFirst() ?? Cell()
+            cell.index = index
+            cell.item = main.items.value[index]
+            documentView!.layer!.addSublayer(cell)
+            active.insert(cell)
+            visible[index] = true
+            return cell
+        }
+        return active.first { $0.index == index }!
     }
     
     private func cell(_ with: NSEvent) -> Cell? {

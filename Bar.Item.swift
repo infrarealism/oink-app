@@ -34,12 +34,12 @@ extension Bar {
             addSubview(label)
             self.label = label
             
-            bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 10).isActive = true
+            bottomAnchor.constraint(equalTo: label.bottomAnchor, constant: 8).isActive = true
             
             icon.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
             icon.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
             
-            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 10).isActive = true
+            label.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 8).isActive = true
             label.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
             label.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -15).isActive = true
             hoverOff()

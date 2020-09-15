@@ -45,9 +45,9 @@ extension Display {
         }
         
         @objc private func share(_ button: Control.Circle) {
-            guard let item = main.cell.value?.item else { return }
-            let export = Export(item: item)
-            export.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+//            guard let item = main.cell.value?.item else { return }
+//            let export = Export(item: item)
+//            export.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }
 }

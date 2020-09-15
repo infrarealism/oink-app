@@ -3,17 +3,7 @@ import Combine
 
 final class Bar: NSVisualEffectView {
     private weak var main: Main!
-    private weak var items: Label!
-    private weak var image: Label!
-    private weak var specs: Label!
-    private weak var date: Label!
-    private weak var grid: Item!
-    private weak var separator: Separator!
     private var subs = Set<AnyCancellable>()
-    private let transition = CATransition()
-    private let bytes = ByteCountFormatter()
-    private let count = NumberFormatter()
-    private let format = DateFormatter()
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -23,58 +13,61 @@ final class Bar: NSVisualEffectView {
         translatesAutoresizingMaskIntoConstraints = false
         material = .hudWindow
         
+        let transition = CATransition()
         transition.timingFunction = .init(name: .easeInEaseOut)
-        transition.type = .moveIn
-        transition.subtype = .fromTop
-        transition.duration = 1
+        transition.type = .push
+        transition.subtype = .fromBottom
+        transition.duration = 0.3
         
+        let bytes = ByteCountFormatter()
+        
+        let count = NumberFormatter()
         count.numberStyle = .decimal
+        
+        let format = DateFormatter()
         format.dateStyle = .full
         format.timeStyle = .short
         
-        let folder = Label(.systemFont(ofSize: 18, weight: .medium))
+        let back = Control.Button(icon: "back", color: .labelColor)
+        back.alphaValue = 0
+        back.target = self
+        back.action = #selector(self.back)
+        addSubview(back)
+        
+        let folder = Label(.systemFont(ofSize: 16, weight: .medium))
         folder.stringValue = main.url.lastPathComponent
         folder.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(folder)
         
-        let items = Label(.systemFont(ofSize: 14, weight: .light))
+        let items = Label(.systemFont(ofSize: 12, weight: .light))
         items.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(items)
-        self.items = items
+        
+        let change = Item(icon: "folder", title: "Change")
+        change.target = NSApp.windows.first
+        change.action = #selector(Window.folder)
+        addSubview(change)
         
         let separator = Separator()
         separator.alphaValue = 0
         addSubview(separator)
-        self.separator = separator
         
-        let image = Label(.systemFont(ofSize: 18, weight: .medium))
+        let image = Label(.systemFont(ofSize: 16, weight: .medium))
         image.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(image)
-        self.image = image
         
-        let specs = Label(.systemFont(ofSize: 14, weight: .light))
+        let specs = Label(.systemFont(ofSize: 12, weight: .light))
         specs.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(specs)
-        self.specs = specs
         
-        let date = Label(.systemFont(ofSize: 14, weight: .light))
+        let date = Label(.systemFont(ofSize: 12, weight: .light))
         date.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(date)
-        self.date = date
-        
-        let grid = Item(icon: "grid", title: "View all")
-        grid.target = self
-        grid.action = #selector(viewAll)
-        grid.alphaValue = 0
-        addSubview(grid)
-        self.grid = grid
-        
-        let close = Item(icon: "close", title: "Close")
-        close.target = self
-        close.action = #selector(self.close)
-        addSubview(close)
         
         widthAnchor.constraint(equalToConstant: 220).isActive = true
+        
+        back.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
+        back.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         
         folder.topAnchor.constraint(equalTo: topAnchor, constant: 40).isActive = true
         folder.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
@@ -84,7 +77,11 @@ final class Bar: NSVisualEffectView {
         items.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         items.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
-        separator.topAnchor.constraint(equalTo: items.bottomAnchor, constant: 20).isActive = true
+        change.topAnchor.constraint(equalTo: items.bottomAnchor, constant: 10).isActive = true
+        change.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
+        change.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
+        
+        separator.topAnchor.constraint(equalTo: change.bottomAnchor, constant: 10).isActive = true
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         separator.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         separator.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
@@ -101,61 +98,39 @@ final class Bar: NSVisualEffectView {
         date.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         date.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
-        grid.topAnchor.constraint(equalTo: specs.bottomAnchor, constant: 30).isActive = true
-        grid.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
-        grid.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
-        
-        close.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
-        close.leftAnchor.constraint(equalTo: leftAnchor, constant: 30).isActive = true
-        close.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
-        
-        main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] in
-            self?.update($0)
+        main.items.dropFirst().receive(on: DispatchQueue.main).sink {
+            items.layer!.add(transition, forKey: "transition")
+            items.stringValue = count.string(from: .init(value: $0.count))! + " images\n" + bytes.string(from: .init(value: .init($0.reduce(0) { $0 + $1.bytes }), unit: .bytes))
         }.store(in: &subs)
         
-        main.cell.dropFirst().sink { [weak self] in
-            $0?.item.map {
-                self?.update($0)
+        main.index.dropFirst().sink {
+            if let index = $0 {
+                let item = main.items.value[index]
+                image.stringValue = item.url.lastPathComponent
+                specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
+                date.stringValue = format.string(from: item.date)
+            } else {
+                image.stringValue = ""
+                specs.stringValue = ""
+                date.stringValue = ""
+            }
+            image.layer!.add(transition, forKey: "transition")
+            specs.layer!.add(transition, forKey: "transition")
+            date.layer!.add(transition, forKey: "transition")
+        }.store(in: &subs)
+        
+        main.zoom.dropFirst().sink { zoom in
+            NSAnimationContext.runAnimationGroup {
+                $0.duration = 0.3
+                $0.allowsImplicitAnimation = true
+                separator.alphaValue = zoom ? 1 : 0
+                back.alphaValue = zoom ? 1 : 0
             }
         }.store(in: &subs)
     }
     
-    private func update(_ items: [Photo]) {
-        self.items.layer!.add(transition, forKey: "transition")
-        self.items.stringValue = count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes))
-    }
-    
-    private func update(_ item: Photo) {
-        image.stringValue = item.url.lastPathComponent
-        specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
-        date.stringValue = format.string(from: item.date)
-        
-        NSAnimationContext.runAnimationGroup {
-            $0.duration = 0.5
-            $0.allowsImplicitAnimation = true
-            separator.alphaValue = 1
-            grid.alphaValue = 1
-            image.alphaValue = 1
-            specs.alphaValue = 1
-            date.alphaValue = 1
-        }
-    }
-    
-    @objc private func viewAll() {
-        main.clear()
-        
-        NSAnimationContext.runAnimationGroup {
-            $0.duration = 0.3
-            $0.allowsImplicitAnimation = true
-            separator.alphaValue = 0
-            grid.alphaValue = 0
-            image.alphaValue = 0
-            specs.alphaValue = 0
-            date.alphaValue = 0
-        }
-    }
-    
-    @objc private func close() {
-        (NSApp.windows.first as! Window).clear()
+    @objc private func back() {
+        main.index.value = nil
+        main.zoom.value = false
     }
 }

@@ -33,14 +33,17 @@ final class Window: NSWindow {
         NSApp.terminate(nil)
     }
     
-    func clear() {
-        session.close()
-        launch()
-    }
-    
-    func create(_ bookmark: Bookmark) {
-        session.update(bookmark)
-        main(bookmark)
+    @objc func folder() {
+        let browse = NSOpenPanel()
+        browse.canChooseFiles = false
+        browse.canChooseDirectories = true
+        browse.prompt = "Select"
+        browse.beginSheetModal(for: self) { [weak self] in
+            guard $0 == .OK else { return }
+            let bookmark = Bookmark(browse.url!)
+            self?.session.update(bookmark)
+            self?.main(bookmark)
+        }
     }
     
     private func launch() {

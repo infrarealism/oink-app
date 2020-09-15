@@ -7,8 +7,8 @@ final class Launch: NSView {
         translatesAutoresizingMaskIntoConstraints = false
         
         let control = Control.Blob(icon: "folder")
-        control.target = self
-        control.action = #selector(folder)
+        control.target = NSApp.windows.first
+        control.action = #selector(Window.folder)
         addSubview(control)
         
         let label = Label(.systemFont(ofSize: 14, weight: .medium))
@@ -20,16 +20,5 @@ final class Launch: NSView {
         
         label.topAnchor.constraint(equalTo: control.bottomAnchor).isActive = true
         label.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-    }
-    
-    @objc private func folder() {
-        let browse = NSOpenPanel()
-        browse.canChooseFiles = false
-        browse.canChooseDirectories = true
-        browse.prompt = "Select"
-        browse.beginSheetModal(for: window!) {
-            guard $0 == .OK else { return }
-            (NSApp.windows.first as! Window).create(.init(browse.url!))
-        }
     }
 }

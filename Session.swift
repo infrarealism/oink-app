@@ -14,7 +14,7 @@ final class Session {
                         let remove = !FileManager.default.fileExists(atPath: access.path) || access.pathComponents.contains(".Trash")
                         access.stopAccessingSecurityScopedResource()
                         if remove {
-                            self?.close()
+                            self?.store.remove(Bookmark.self) { _ in true }
                             promise(.success(nil))
                         } else {
                             promise(.success(bookmark))
@@ -30,9 +30,5 @@ final class Session {
     func update(_ bookmark: Bookmark) {
         store.remove(bookmark)
         store.add(bookmark)
-    }
-    
-    func close() {
-        store.remove(Bookmark.self) { _ in true }
     }
 }
