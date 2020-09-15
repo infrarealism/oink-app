@@ -31,6 +31,9 @@
 		CE735F1F25025B940034D80E /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE735F1E25025B940034D80E /* Bookmark.swift */; };
 		CE8C2DF625092AFD000DC2F8 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C2DF525092AFD000DC2F8 /* Separator.swift */; };
 		CE8C2DF825092CFA000DC2F8 /* Control.Title.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */; };
+		CE973B53251105AC009A3A77 /* Coverflow.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE973B52251105AC009A3A77 /* Coverflow.swift */; };
+		CE973B552511065D009A3A77 /* Coverflow.Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE973B542511065D009A3A77 /* Coverflow.Cell.swift */; };
+		CE973B5725110C60009A3A77 /* Flip.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE973B5625110C60009A3A77 /* Flip.swift */; };
 		CEEC549325023E9700B1CB99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEEC549225023E9700B1CB99 /* Assets.xcassets */; };
 		CEEC549F2502417900B1CB99 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC549E2502417900B1CB99 /* Window.swift */; };
 		CEEC54A12502418000B1CB99 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC54A02502418000B1CB99 /* Menu.swift */; };
@@ -60,6 +63,9 @@
 		CE735F1E25025B940034D80E /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		CE8C2DF525092AFD000DC2F8 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Control.Title.swift; sourceTree = "<group>"; };
+		CE973B52251105AC009A3A77 /* Coverflow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coverflow.swift; sourceTree = "<group>"; };
+		CE973B542511065D009A3A77 /* Coverflow.Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coverflow.Cell.swift; sourceTree = "<group>"; };
+		CE973B5625110C60009A3A77 /* Flip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flip.swift; sourceTree = "<group>"; };
 		CEEC548B25023E9600B1CB99 /* Oink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Oink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEC549225023E9700B1CB99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CEEC549725023E9700B1CB99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,9 +101,12 @@
 				CE12E2942507DC830010CF30 /* Control.Circle.swift */,
 				CE735F13250253D90034D80E /* Control.swift */,
 				CE8C2DF725092CFA000DC2F8 /* Control.Title.swift */,
+				CE973B542511065D009A3A77 /* Coverflow.Cell.swift */,
+				CE973B52251105AC009A3A77 /* Coverflow.swift */,
 				CE0C6F2C25078E3C0078B59A /* Display.Bar.swift */,
 				CE16437E250665B500F2CF2B /* Display.swift */,
 				CE2AC9F02508EAEE00AF620A /* Export.swift */,
+				CE973B5625110C60009A3A77 /* Flip.swift */,
 				CE2F71CC2504E832003CBA9E /* Grid.Cell.swift */,
 				CE65E7B12503B55400FB854B /* Grid.swift */,
 				CE342DB7250272940060C9E5 /* Label.swift */,
@@ -205,6 +214,8 @@
 				CEEC54A12502418000B1CB99 /* Menu.swift in Sources */,
 				CE735F14250253D90034D80E /* Control.swift in Sources */,
 				CE342DBC250284800060C9E5 /* URL.swift in Sources */,
+				CE973B53251105AC009A3A77 /* Coverflow.swift in Sources */,
+				CE973B5725110C60009A3A77 /* Flip.swift in Sources */,
 				CE735F16250254130034D80E /* Control.Blob.swift in Sources */,
 				CE2F71CD2504E832003CBA9E /* Grid.Cell.swift in Sources */,
 				CE1BB18D2510CAD40096C996 /* CALayer.swift in Sources */,
@@ -212,6 +223,7 @@
 				CE65E7B22503B55400FB854B /* Grid.swift in Sources */,
 				CE1BB18B2510B7900096C996 /* Bar.Item.swift in Sources */,
 				CE00140A25061B1500DEC8A3 /* Photo.swift in Sources */,
+				CE973B552511065D009A3A77 /* Coverflow.Cell.swift in Sources */,
 				CE8C2DF825092CFA000DC2F8 /* Control.Title.swift in Sources */,
 				CE2AC9F12508EAEE00AF620A /* Export.swift in Sources */,
 				CE735F182502552A0034D80E /* Launch.swift in Sources */,
