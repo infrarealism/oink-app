@@ -36,14 +36,18 @@ extension Grid {
         
         override class func defaultAction(forKey: String) -> CAAction? {
             switch forKey {
-            case "contents":
-                let transition = CABasicAnimation(keyPath: "opacity")
-                transition.duration = 1
-                transition.timingFunction = .init(name: .easeOut)
-                transition.fromValue = 0
-                return transition
+            case "contents": return opacity
             default: return NSNull()
             }
         }
+        
+        private static var opacity: CABasicAnimation = {
+            $0.duration = 1
+            $0.timingFunction = .init(name: .easeOut)
+            $0.fromValue = 0
+            return $0
+        } (CABasicAnimation(keyPath: "opacity"))
+        
+        
     }
 }

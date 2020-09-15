@@ -10,6 +10,7 @@ final class Bar: NSVisualEffectView {
     private weak var grid: Item!
     private weak var separator: Separator!
     private var subs = Set<AnyCancellable>()
+    private let transition = CATransition()
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -18,6 +19,11 @@ final class Bar: NSVisualEffectView {
         wantsLayer = true
         translatesAutoresizingMaskIntoConstraints = false
         material = .hudWindow
+        
+        transition.timingFunction = .init(name: .easeInEaseOut)
+        transition.type = .moveIn
+        transition.subtype = .fromTop
+        transition.duration = 1
         
         let folder = Label(.systemFont(ofSize: 18, weight: .medium))
         folder.stringValue = main.url.lastPathComponent
@@ -112,10 +118,6 @@ final class Bar: NSVisualEffectView {
         count.numberStyle = .decimal
         let bytes = ByteCountFormatter()
         
-        let transition = CATransition()
-        transition.timingFunction = .init(name: .easeInEaseOut)
-        transition.type = .fade
-        transition.duration = 1
         self.items.layer!.add(transition, forKey: "transition")
         
         self.items.stringValue = count.string(from: .init(value: items.count))! + " images\n" + bytes.string(from: .init(value: .init(items.reduce(0) { $0 + $1.bytes }), unit: .bytes))
