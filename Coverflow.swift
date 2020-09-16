@@ -60,7 +60,6 @@ final class Coverflow: NSScrollView {
     
     private func render() {
         let current = self.current
-        let visible = self.visible
         visible.enumerated().filter { $0.1 }.forEach { index in
             guard !current.contains(index.0) else { return }
             let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
