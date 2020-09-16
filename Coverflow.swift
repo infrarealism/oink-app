@@ -60,14 +60,14 @@ final class Coverflow: NSScrollView {
     
     private func render() {
         let current = self.current
-        visible.enumerated().filter { $0.1 }.forEach { index in
-            guard !current.contains(index.0) else { return }
-            let cell = active.remove(at: active.firstIndex { $0.index == index.0 }!)
-            cell.removeFromSuperlayer()
-            cell.item = nil
-            self.visible[index.0] = false
-            queue.insert(cell)
+        queue.filter { $0.item != nil }.forEach {
+            guard !current.contains($0.index) else { return }
+            $0.item = nil
         }
+        
+        
+        
+        
         current.forEach {
             let item = cell($0)
             item.frame = .init(origin: positions[$0], size: size)
