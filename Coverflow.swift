@@ -27,6 +27,7 @@ final class Coverflow: NSScrollView {
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
             self?.refresh()
+            self?.redindex()
         }.store(in: &subs)
         
         main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] _ in
@@ -34,17 +35,21 @@ final class Coverflow: NSScrollView {
         }.store(in: &subs)
         
         main.index.dropFirst().sink { [weak self] in
-            guard let self = self else { return }
-//            if let zoomed = self.zoomed {
-//                zoomed.update(.init(origin: self.positions[zoomed.index], size: self.size))
-//            }
+            guard let self = self else{ return }
             if let index = $0 {
-//                let zoomed = self.cell(index)
-//                content.layer!.bringFront(zoomed)
-//                zoomed.update(.init(x: 0, y: self.contentView.bounds.minY, width: self.frame.width, height: self.frame.height))
-//                self.zoomed = zoomed
+                NSAnimationContext.runAnimationGroup {
+                    $0.duration = 0.3
+                    $0.allowsImplicitAnimation = true
+                    self.contentView.bounds.origin.x = .init(index) * self.frame.width
+                }
             }
         }.store(in: &subs)
+    }
+    
+    private func redindex() {
+        let index = max(min(Int((contentView.bounds.midX) / frame.width), main.items.value.count - 1), 0)
+        guard index != main.index.value else { return }
+        main.index.value = index
     }
     
     private func refresh() {
