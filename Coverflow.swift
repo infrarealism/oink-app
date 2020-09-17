@@ -22,7 +22,7 @@ final class Coverflow: NSScrollView {
         content.wantsLayer = true
         translatesAutoresizingMaskIntoConstraints = false
         documentView = content
-        hasVerticalScroller = true
+        hasHorizontalScroller = true
         contentView.postsBoundsChangedNotifications = true
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
@@ -71,7 +71,7 @@ final class Coverflow: NSScrollView {
                 self.active.insert(cell)
                 return cell
             } ()
-            cell.frame = .init(origin: .zero, size: frame.size)
+            cell.frame = .init(origin: .init(x: frame.width * .init(index), y: 0), size: frame.size)
         }
     }
     
