@@ -4,19 +4,15 @@ import Combine
 final class Coverflow: NSScrollView {
     override var frame: NSRect {
         didSet {
-            documentView!.frame.size.width = frame.width
-            let total = frame.width - 1
-            let width = self.width + 1
-            let count = floor(total / width)
-            let delta = floor(total.truncatingRemainder(dividingBy: width) / count)
-            size = .init(width: self.width + delta, height: self.width + delta)
+            documentView!.frame.size.height = frame.height
             refresh()
         }
     }
     
     private weak var main: Main!
     private var subs = Set<AnyCancellable>()
-    private var queue = [Cell(), .init(), .init()]
+    private var queue = Set([Cell(), .init(), .init()])
+    private var active = Set<Cell>()
     
     required init?(coder: NSCoder) { nil }
     init(main: Main) {
@@ -28,8 +24,6 @@ final class Coverflow: NSScrollView {
         documentView = content
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
-        
-        queue.forEach(content.layer!.addSublayer)
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
             self?.refresh()
@@ -60,17 +54,24 @@ final class Coverflow: NSScrollView {
     
     private func render() {
         let current = self.current
-        queue.filter { $0.item != nil }.forEach {
+        let active = self.active
+        active.forEach {
             guard !current.contains($0.index) else { return }
+            self.active.remove($0)
+            $0.removeFromSuperlayer()
             $0.item = nil
+            queue.insert($0)
         }
-        
-        
-        
-        
-        current.forEach {
-            let item = cell($0)
-            item.frame = .init(origin: positions[$0], size: size)
+        current.forEach { index in
+            let cell = self.active.first { $0.index == index } ?? {
+                let cell = queue.popFirst()!
+                cell.index = index
+                cell.item = main.items.value[index]
+                documentView!.layer!.addSublayer(cell)
+                self.active.insert(cell)
+                return cell
+            } ()
+            cell.frame = .init(origin: .zero, size: frame.size)
         }
     }
     
@@ -80,18 +81,5 @@ final class Coverflow: NSScrollView {
                 $0 >= 0 && $0 < main.items.value.count ? $0 : nil
             } (Int($0 / frame.width))
         }
-    }
-    
-    private func cell(_ index: Int) -> Cell {
-        guard visible[index] else {
-            let cell = queue.popFirst() ?? Cell()
-            cell.index = index
-            cell.item = main.items.value[index]
-            documentView!.layer!.addSublayer(cell)
-            active.insert(cell)
-            visible[index] = true
-            return cell
-        }
-        return active.first { $0.index == index }!
     }
 }
