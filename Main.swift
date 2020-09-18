@@ -6,8 +6,6 @@ final class Main: NSView {
     let index = CurrentValueSubject<Int?, Never>(nil)
     let items = CurrentValueSubject<[Photo], Never>([])
     let url: URL
-    private weak var grid: Grid!
-    private weak var coverflow: Coverflow!
     private var subs = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) { nil }
@@ -21,12 +19,10 @@ final class Main: NSView {
         
         let grid = Grid(main: self)
         addSubview(grid)
-        self.grid = grid
         
         let coverflow = Coverflow(main: self)
         coverflow.isHidden = true
         addSubview(coverflow)
-        self.coverflow = coverflow
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bar.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -46,9 +42,16 @@ final class Main: NSView {
             self?.items.value = url.items
         }
         
-        zoom.dropFirst().debounce(for: .seconds(1), scheduler: DispatchQueue.main).sink {
-            coverflow.isHidden = !$0
-            grid.isHidden = $0
+        zoom.dropFirst().sink {
+            if $0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    coverflow.isHidden = false
+                    grid.isHidden = true
+                }
+            } else {
+                coverflow.isHidden = true
+                grid.isHidden = false
+            }
         }.store(in: &subs)
     }
     

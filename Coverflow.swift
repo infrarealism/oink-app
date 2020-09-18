@@ -35,6 +35,11 @@ final class Coverflow: NSScrollView {
         }.store(in: &subs)
         
         main.index.dropFirst().debounce(for: .seconds(0.2), scheduler: DispatchQueue.main).sink { [weak self] _ in
+            guard self?.isHidden == false else {
+                guard let self = self, let index = self.main.index.value else { return }
+                self.contentView.bounds.origin.x = .init(index) * self.frame.width
+                return
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 guard let self = self, let index = self.main.index.value else { return }
                 NSAnimationContext.runAnimationGroup {

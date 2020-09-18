@@ -57,6 +57,9 @@ final class Grid: NSScrollView {
                 content.layer!.bringFront(zoomed)
                 zoomed.update(.init(x: 0, y: self.contentView.bounds.minY, width: self.frame.width, height: self.frame.height))
                 self.zoomed = zoomed
+                if self.isHidden {
+                    self.contentView.bounds.origin.y = max(min(self.positions[index].y - (self.frame.height / 2), content.frame.size.height - self.frame.height), 0)
+                }
             }
         }.store(in: &subs)
     }
