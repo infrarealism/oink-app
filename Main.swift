@@ -8,6 +8,7 @@ final class Main: NSView {
     let url: URL
     private weak var grid: Grid!
     private weak var coverflow: Coverflow!
+    private var subs = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) { nil }
     init(url: URL) {
@@ -19,11 +20,11 @@ final class Main: NSView {
         addSubview(bar)
         
         let grid = Grid(main: self)
-        grid.isHidden = true
         addSubview(grid)
         self.grid = grid
         
         let coverflow = Coverflow(main: self)
+        coverflow.isHidden = true
         addSubview(coverflow)
         self.coverflow = coverflow
         
@@ -44,6 +45,11 @@ final class Main: NSView {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             self?.items.value = url.items
         }
+        
+        zoom.dropFirst().debounce(for: .seconds(1), scheduler: DispatchQueue.main).sink {
+            coverflow.isHidden = !$0
+            grid.isHidden = $0
+        }.store(in: &subs)
     }
     
     deinit {
