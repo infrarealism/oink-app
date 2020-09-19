@@ -8,7 +8,7 @@ final class Grid: NSScrollView {
             let total = frame.width - 1
             let width = self.width + 1
             let count = floor(total / width)
-            let delta = floor(total.truncatingRemainder(dividingBy: width) / count)
+            let delta = total.truncatingRemainder(dividingBy: width) / count
             size = .init(width: self.width + delta, height: self.width + delta)
             refresh()
         }
@@ -64,9 +64,10 @@ final class Grid: NSScrollView {
         }.store(in: &subs)
     }
     
-    override func mouseUp(with: NSEvent) {
+    override func mouseDown(with: NSEvent) {
         guard
             !main.zoom.value,
+            with.clickCount == 2,
             let index = cell(with)?.index
         else { return }
         main.zoom.value = true
@@ -83,7 +84,7 @@ final class Grid: NSScrollView {
         var current = CGPoint(x: -size.width, y: 2)
         (0 ..< main.items.value.count).forEach { _ in
             current.x += size.width + 1
-            if current.x + size.width + 1 > bounds.width {
+            if current.x + size.width > bounds.width {
                 current = .init(x: 1, y: current.y + size.height + 1)
             }
             positions.append(current)
