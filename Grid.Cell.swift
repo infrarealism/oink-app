@@ -14,6 +14,12 @@ extension Grid {
             }
         }
         
+        var highlighted = false {
+            didSet {
+                borderWidth = highlighted ? 6 : 0
+            }
+        }
+        
         var index = 0
         private var sub: AnyCancellable?
         
@@ -22,6 +28,7 @@ extension Grid {
             super.init()
             contentsGravity = .resizeAspectFill
             masksToBounds = true
+            borderColor = NSColor.labelColor.cgColor
         }
         
         func update(_ frame: CGRect) {

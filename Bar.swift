@@ -52,6 +52,17 @@ final class Bar: NSVisualEffectView {
         separator.alphaValue = 0
         addSubview(separator)
         
+        let selected = Label(.systemFont(ofSize: 14, weight: .medium))
+        selected.alignment = .center
+        selected.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        addSubview(selected)
+        
+        let delete = Item(icon: "delete", title: "Delete")
+        delete.target = main
+        delete.action = #selector(main.delete)
+        delete.isHidden = true
+        addSubview(delete)
+        
         let image = Label(.systemFont(ofSize: 16, weight: .medium))
         image.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(image)
@@ -85,6 +96,14 @@ final class Bar: NSVisualEffectView {
         separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
         separator.rightAnchor.constraint(equalTo: rightAnchor, constant: -20).isActive = true
         separator.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        
+        selected.bottomAnchor.constraint(equalTo: delete.topAnchor, constant: -10).isActive = true
+        selected.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        selected.rightAnchor.constraint(equalTo: rightAnchor, constant: -30).isActive = true
+        
+        delete.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30).isActive = true
+        delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
+        delete.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
         
         image.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 20).isActive = true
         image.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
@@ -123,9 +142,17 @@ final class Bar: NSVisualEffectView {
             NSAnimationContext.runAnimationGroup {
                 $0.duration = 0.3
                 $0.allowsImplicitAnimation = true
+                selected.alphaValue = zoom ? 0 : 1
+                delete.alphaValue = zoom ? 0 : 1
                 separator.alphaValue = zoom ? 1 : 0
                 back.alphaValue = zoom ? 1 : 0
             }
+        }.store(in: &subs)
+        
+        main.grid.selected.dropFirst().sink {
+            let count = $0.filter { $0 }.count
+            selected.stringValue = count == 0 ? "" : "\(count) selected"
+            delete.isHidden = count == 0
         }.store(in: &subs)
     }
     

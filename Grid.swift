@@ -14,6 +14,7 @@ final class Grid: NSScrollView {
         }
     }
     
+    let selected = CurrentValueSubject<[Bool], Never>([])
     private(set) var positions = [CGPoint]()
     private(set) var size = CGSize.zero
     private weak var zoomed: Cell?
@@ -44,6 +45,7 @@ final class Grid: NSScrollView {
             self?.queue = []
             self?.active = []
             self?.visible = .init(repeating: false, count: $0.count)
+            self?.selected.value = .init(repeating: false, count: $0.count)
             self?.refresh()
         }.store(in: &subs)
         
@@ -67,11 +69,14 @@ final class Grid: NSScrollView {
     override func mouseDown(with: NSEvent) {
         guard
             !main.zoom.value,
-            with.clickCount == 2,
-            let index = cell(with)?.index
+            let cell = cell(with)
         else { return }
-        main.zoom.value = true
-        main.index.value = index
+        selected.value[cell.index].toggle()
+        cell.highlighted = selected.value[cell.index]
+        if with.clickCount == 2 {
+            main.zoom.value = true
+            main.index.value = cell.index
+        }
     }
     
     private func refresh() {
@@ -107,6 +112,7 @@ final class Grid: NSScrollView {
         current.forEach {
             let item = cell($0)
             item.frame = .init(origin: positions[$0], size: size)
+            item.highlighted = selected.value[$0]
         }
     }
     

@@ -2,6 +2,7 @@ import AppKit
 import Combine
 
 final class Main: NSView {
+    private(set) weak var grid: Grid!
     let zoom = CurrentValueSubject<Bool, Never>(false)
     let index = CurrentValueSubject<Int?, Never>(nil)
     let items = CurrentValueSubject<[Photo], Never>([])
@@ -14,15 +15,16 @@ final class Main: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
-        let bar = Bar(main: self)
-        addSubview(bar)
-        
         let grid = Grid(main: self)
         addSubview(grid)
+        self.grid = grid
         
         let coverflow = Coverflow(main: self)
         coverflow.isHidden = true
         addSubview(coverflow)
+        
+        let bar = Bar(main: self)
+        addSubview(bar)
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bar.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -57,5 +59,25 @@ final class Main: NSView {
     
     deinit {
         url.stopAccessingSecurityScopedResource()
+    }
+    
+    @objc func delete() {
+        let alert = NSAlert()
+        alert.messageText = "Delete selected?"
+        alert.informativeText = "Can't be undone"
+        alert.addButton(withTitle: "Cancel")
+        alert.addButton(withTitle: "Delete")
+        alert.alertStyle = .warning
+        alert.beginSheetModal(for: window!) { [weak self] in
+            guard let self = self, $0 == .alertSecondButtonReturn else { return }
+            self.items.value = self.items.value.enumerated().reduce(into: [Photo]()) {
+                guard self.grid.selected.value[$1.0] else {
+                    $0.append($1.1)
+                    return
+                }
+                try? FileManager.default.trashItem(at: $1.1.url, resultingItemURL: nil)
+                return
+            }
+        }
     }
 }
