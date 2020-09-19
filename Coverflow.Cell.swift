@@ -5,9 +5,10 @@ extension Coverflow {
     final class Cell: CALayer {
         weak var item: Photo? {
             didSet {
-                sub = item?.thumb.receive(on: DispatchQueue.main).sink { [weak self] in
-                    self?.contents = $0
+                contents = item?.thumb.value
+                sub = item?.image.receive(on: DispatchQueue.main).sink { [weak self] in
                     if $0 != nil {
+                        self?.contents = $0
                         self?.sub?.cancel()
                     }
                 }

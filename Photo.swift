@@ -2,16 +2,13 @@ import Foundation
 import Combine
 
 final class Photo {
-    var image: CGImage? {
-        render(size: min(1024, min(size.width, size.height)))
-    }
-    
     let url: URL
     let date: Date
     let iso: Int?
     let size: CGSize
     let bytes: Int
     private let _thumb = CurrentValueSubject<CGImage?, Never>(nil)
+    private let _image = CurrentValueSubject<CGImage?, Never>(nil)
     
     init(_ url: URL, date: Date, iso: Int?, size: CGSize, bytes: Int) {
         self.url = url
@@ -28,6 +25,16 @@ final class Photo {
             }
         }
         return _thumb
+    }
+    
+    var image: CurrentValueSubject<CGImage?, Never> {
+        if _image.value == nil {
+            let size = self.size
+            DispatchQueue.global(qos: .utility).async { [weak self] in
+                self?._image.value = self?.render(size: min(1024, min(size.width, size.height)))
+            }
+        }
+        return _image
     }
     
     func export(_ size: CGSize) -> Data? {

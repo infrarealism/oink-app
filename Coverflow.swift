@@ -40,7 +40,7 @@ final class Coverflow: NSScrollView {
                 self.contentView.bounds.origin.x = .init(index) * self.frame.width
                 return
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 guard let self = self, let index = self.main.index.value else { return }
                 NSAnimationContext.runAnimationGroup {
                     $0.duration = 0.3
@@ -53,7 +53,6 @@ final class Coverflow: NSScrollView {
     
     private func redindex() {
         let index = max(min(Int(contentView.bounds.midX / frame.width), main.items.value.count - 1), 0)
-        guard index != main.index.value else { return }
         main.index.value = index
     }
     
