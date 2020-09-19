@@ -75,6 +75,12 @@ final class Bar: NSVisualEffectView {
         date.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         addSubview(date)
         
+        let export = Item(icon: "export", title: "Export")
+        export.target = main
+        export.action = #selector(main.export)
+        export.alphaValue = 0
+        addSubview(export)
+        
         widthAnchor.constraint(equalToConstant: 220).isActive = true
         
         back.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
@@ -88,7 +94,7 @@ final class Bar: NSVisualEffectView {
         items.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         items.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
-        change.topAnchor.constraint(equalTo: items.bottomAnchor, constant: 10).isActive = true
+        change.topAnchor.constraint(equalTo: items.bottomAnchor, constant: 20).isActive = true
         change.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
         change.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
         
@@ -105,7 +111,7 @@ final class Bar: NSVisualEffectView {
         delete.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
         delete.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
         
-        image.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 20).isActive = true
+        image.topAnchor.constraint(equalTo: export.bottomAnchor, constant: 20).isActive = true
         image.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         image.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
@@ -117,14 +123,20 @@ final class Bar: NSVisualEffectView {
         date.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
         date.rightAnchor.constraint(lessThanOrEqualTo: rightAnchor, constant: -20).isActive = true
         
+        export.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 20).isActive = true
+        export.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
+        export.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
+        
         main.items.dropFirst().receive(on: DispatchQueue.main).sink {
             items.layer!.add(transition, forKey: "transition")
             items.stringValue = count.string(from: .init(value: $0.count))! + " images\n" + bytes.string(from: .init(value: .init($0.reduce(0) { $0 + $1.bytes }), unit: .bytes))
         }.store(in: &subs)
         
-        main.index.dropFirst().sink {
+        main.index.dropFirst().debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink {
+            var changed = true
             if let index = $0 {
                 let item = main.items.value[index]
+                changed = item.url.lastPathComponent != image.stringValue
                 image.stringValue = item.url.lastPathComponent
                 specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
                 date.stringValue = format.string(from: item.date)
@@ -133,9 +145,11 @@ final class Bar: NSVisualEffectView {
                 specs.stringValue = ""
                 date.stringValue = ""
             }
-            image.layer!.add(transition, forKey: "transition")
-            specs.layer!.add(transition, forKey: "transition")
-            date.layer!.add(transition, forKey: "transition")
+            if changed {
+                image.layer!.add(transition, forKey: "transition")
+                specs.layer!.add(transition, forKey: "transition")
+                date.layer!.add(transition, forKey: "transition")
+            }
         }.store(in: &subs)
         
         main.zoom.dropFirst().sink { zoom in
@@ -146,10 +160,11 @@ final class Bar: NSVisualEffectView {
                 delete.alphaValue = zoom ? 0 : 1
                 separator.alphaValue = zoom ? 1 : 0
                 back.alphaValue = zoom ? 1 : 0
+                export.alphaValue = zoom ? 1 : 0
             }
         }.store(in: &subs)
         
-        main.grid.selected.dropFirst().sink {
+        main.grid.selected.dropFirst().debounce(for: .seconds(0.5), scheduler: DispatchQueue.main).sink {
             let count = $0.filter { $0 }.count
             selected.stringValue = count == 0 ? "" : "\(count) selected"
             delete.isHidden = count == 0

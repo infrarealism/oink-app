@@ -80,4 +80,10 @@ final class Main: NSView {
             }
         }
     }
+    
+    @objc func export(_ button: Bar.Item) {
+        index.value.map {
+            Export(item: items.value[$0]).show(relativeTo: button.bounds, of: button, preferredEdge: .maxX)
+        }
+    }
 }

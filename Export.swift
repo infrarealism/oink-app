@@ -4,7 +4,7 @@ final class Export: NSPopover {
     private weak var item: Photo!
     private weak var segmented: Segmented!
     private let sizes: [CGSize]
-    private let widths = [CGFloat(320), 640, 1024, 1400]
+    private let widths = [CGFloat(320), 1024]
     
     required init?(coder: NSCoder) { nil }
     init(item: Photo) {
@@ -14,7 +14,7 @@ final class Export: NSPopover {
         self.item = item
         super.init()
         behavior = .transient
-        contentSize = .init(width: 700, height: 260)
+        contentSize = .init(width: 440, height: 260)
         contentViewController = .init()
         contentViewController!.view = .init()
         
@@ -42,7 +42,7 @@ final class Export: NSPopover {
         
         segmented.topAnchor.constraint(equalTo: contentViewController!.view.topAnchor, constant: 80).isActive = true
         segmented.centerXAnchor.constraint(equalTo: contentViewController!.view.centerXAnchor).isActive = true
-        segmented.widthAnchor.constraint(equalToConstant: 640).isActive = true
+        segmented.widthAnchor.constraint(equalToConstant: 380).isActive = true
         
         export.topAnchor.constraint(equalTo: segmented.bottomAnchor, constant: 40).isActive = true
         export.centerXAnchor.constraint(equalTo: contentViewController!.view.centerXAnchor).isActive = true
