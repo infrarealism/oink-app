@@ -16,7 +16,7 @@ extension Grid {
         
         var highlighted = false {
             didSet {
-                borderWidth = highlighted ? 6 : 0
+                borderWidth = highlighted ? 10 : 0
             }
         }
         
@@ -28,7 +28,7 @@ extension Grid {
             super.init()
             contentsGravity = .resizeAspectFill
             masksToBounds = true
-            borderColor = NSColor.labelColor.cgColor
+            borderColor = NSColor.secondaryLabelColor.cgColor
         }
         
         func update(_ frame: CGRect) {
