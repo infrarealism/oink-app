@@ -63,6 +63,7 @@ final class Coverflow: NSScrollView {
     }
     
     private func redindex() {
+        guard isHidden == false else { return }
         let index = max(min(Int(contentView.bounds.midX / frame.width), main.items.value.count - 1), 0)
         main.index.value = index
     }

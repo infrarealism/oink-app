@@ -14,7 +14,6 @@ extension Bar {
         
         private weak var icon: NSImageView!
         private weak var label: Label!
-        private weak var blur: NSVisualEffectView!
         
         required init?(coder: NSCoder) { nil }
         init(icon: String, title: String) {

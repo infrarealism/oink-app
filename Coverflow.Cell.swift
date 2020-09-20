@@ -20,6 +20,7 @@ extension Coverflow {
         private var subs = Set<AnyCancellable>()
         
         required init?(coder: NSCoder) { nil }
+        override init(layer: Any) { super.init(layer: layer) }
         override init() {
             super.init()
             contentsGravity = .resizeAspectFill

@@ -103,7 +103,7 @@ final class Grid: NSScrollView {
             positions.append(current)
         }
         self.positions = positions
-        documentView!.frame.size.height = current.y + size.height + 2
+        documentView!.frame.size.height = max(current.y + size.height + 2, frame.size.height)
     }
     
     private func render() {
