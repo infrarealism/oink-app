@@ -7,9 +7,10 @@ final class Photo {
     let iso: Int?
     let size: CGSize
     let bytes: Int
+    let image = CurrentValueSubject<CGImage?, Never>(nil)
     private var fetched = false
+    private var displayed = false
     private let _thumb = CurrentValueSubject<CGImage?, Never>(nil)
-    private let _image = CurrentValueSubject<CGImage?, Never>(nil)
     
     init(_ url: URL, date: Date, iso: Int?, size: CGSize, bytes: Int) {
         self.url = url
@@ -29,14 +30,13 @@ final class Photo {
         return _thumb
     }
     
-    var image: CurrentValueSubject<CGImage?, Never> {
-        if _image.value == nil {
-            let size = self.size
-            DispatchQueue.global(qos: .utility).async { [weak self] in
-                self?._image.value = self?.render(size: min(1024, min(size.width, size.height)))
-            }
+    func hd() {
+        guard !displayed else { return }
+        displayed = true
+        let size = self.size
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            self?.image.value = self?.render(size: min(1024, min(size.width, size.height)))
         }
-        return _image
     }
     
     func export(_ size: CGSize) -> Data? {
