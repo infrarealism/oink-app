@@ -23,7 +23,7 @@ final class Photo {
     var thumb: CurrentValueSubject<CGImage?, Never> {
         if !fetched {
             fetched = true
-            Self.thumb.async { [weak self] in
+            Self.thumb.randomElement()?.async { [weak self] in
                 self?._thumb.value = self?.render(size: 100)
             }
         }
