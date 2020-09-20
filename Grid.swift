@@ -38,6 +38,7 @@ final class Grid: NSScrollView {
         backgroundColor = .black
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
+            guard self?.isHidden == false else { return }
             self?.refresh()
         }.store(in: &subs)
         
@@ -51,18 +52,19 @@ final class Grid: NSScrollView {
         }.store(in: &subs)
         
         main.index.dropFirst().sink { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, self.zoomed?.index != $0 else { return }
             if let zoomed = self.zoomed {
                 zoomed.update(.init(origin: self.positions[zoomed.index], size: self.size))
             }
             if let index = $0 {
+                if self.isHidden {
+                    self.contentView.bounds.origin.y = max(min(self.positions[index].y - (self.frame.height / 2), content.frame.size.height - self.frame.height), 0)
+                    self.refresh()
+                }
                 let zoomed = self.cell(index)
                 content.layer!.bringFront(zoomed)
                 zoomed.update(.init(x: 0, y: self.contentView.bounds.minY, width: self.frame.width, height: self.frame.height))
                 self.zoomed = zoomed
-                if self.isHidden {
-                    self.contentView.bounds.origin.y = max(min(self.positions[index].y - (self.frame.height / 2), content.frame.size.height - self.frame.height), 0)
-                }
             }
         }.store(in: &subs)
     }
