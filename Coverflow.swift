@@ -37,12 +37,14 @@ final class Coverflow: NSScrollView {
         }.store(in: &subs)
         
         main.index.dropFirst().debounce(for: .seconds(0.2), scheduler: DispatchQueue.main).sink { [weak self] in
+            if self?.main.zoom.value == true {
+                $0.map {
+                    self?.main.items.value[$0].hd()
+                }
+            }
             guard self?.isHidden == false else {
                 self?.center()
                 return
-            }
-            $0.map {
-                self?.main.items.value[$0].hd()
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 NSAnimationContext.runAnimationGroup {
