@@ -23,7 +23,7 @@ final class Photo {
     var thumb: CurrentValueSubject<CGImage?, Never> {
         if !fetched {
             fetched = true
-            DispatchQueue.global(qos: .utility).async { [weak self] in
+            Self.thumb.async { [weak self] in
                 self?._thumb.value = self?.render(size: 100)
             }
         }
@@ -34,7 +34,7 @@ final class Photo {
         guard !displayed else { return }
         displayed = true
         let size = self.size
-        DispatchQueue.global(qos: .utility).async { [weak self] in
+        Self.image.async { [weak self] in
             self?.image.value = self?.render(size: min(1024, min(size.width, size.height)))
         }
     }
