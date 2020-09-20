@@ -7,6 +7,7 @@ final class Photo {
     let iso: Int?
     let size: CGSize
     let bytes: Int
+    private var fetched = false
     private let _thumb = CurrentValueSubject<CGImage?, Never>(nil)
     private let _image = CurrentValueSubject<CGImage?, Never>(nil)
     
@@ -19,7 +20,8 @@ final class Photo {
     }
     
     var thumb: CurrentValueSubject<CGImage?, Never> {
-        if _thumb.value == nil {
+        if !fetched {
+            fetched = true
             DispatchQueue.global(qos: .utility).async { [weak self] in
                 self?._thumb.value = self?.render(size: 100)
             }
