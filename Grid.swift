@@ -55,6 +55,7 @@ final class Grid: NSScrollView {
             guard let self = self, self.zoomed?.index != $0 else { return }
             if let zoomed = self.zoomed {
                 zoomed.update(.init(origin: self.positions[zoomed.index], size: self.size))
+                self.zoomed = nil
             }
             if let index = $0 {
                 if self.isHidden {
