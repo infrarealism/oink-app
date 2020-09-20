@@ -367,7 +367,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -375,7 +375,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 85;
+				MARKETING_VERSION = 88;
 				PRODUCT_BUNDLE_IDENTIFIER = oink.app;
 			};
 			name = Debug;
@@ -388,7 +388,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 88;
 				DEVELOPMENT_TEAM = 7AMWG3RLHN;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -396,7 +396,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 85;
+				MARKETING_VERSION = 88;
 				PRODUCT_BUNDLE_IDENTIFIER = oink.app;
 			};
 			name = Release;
