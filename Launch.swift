@@ -6,6 +6,11 @@ final class Launch: NSView {
         super.init(frame: .zero)
         translatesAutoresizingMaskIntoConstraints = false
         
+        let image = NSImageView(image: NSImage(named: "oink_folder")!)
+        image.translatesAutoresizingMaskIntoConstraints = false
+        image.imageScaling = .scaleNone
+        addSubview(image)
+        
         let control = Control.Blob(icon: "folder")
         control.target = NSApp.windows.first
         control.action = #selector(Window.folder)
@@ -14,6 +19,9 @@ final class Launch: NSView {
         let label = Label(.systemFont(ofSize: 14, weight: .medium))
         label.stringValue = "Select your photos folder"
         addSubview(label)
+        
+        image.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        image.bottomAnchor.constraint(equalTo: control.topAnchor, constant: -20).isActive = true
         
         control.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         control.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
