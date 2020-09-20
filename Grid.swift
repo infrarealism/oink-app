@@ -14,6 +14,10 @@ final class Grid: NSScrollView {
         }
     }
     
+    var selection: Bool {
+        !selected.value.filter { $0 }.isEmpty
+    }
+    
     let selected = CurrentValueSubject<[Bool], Never>([])
     private(set) var positions = [CGPoint]()
     private(set) var size = CGSize.zero

@@ -62,7 +62,6 @@ final class Bar: NSVisualEffectView {
         delete.target = main
         delete.action = #selector(main.delete)
         delete.isHidden = true
-        delete.alphaValue = 0
         addSubview(delete)
         
         let image = Label(.systemFont(ofSize: 16, weight: .medium))
@@ -157,19 +156,20 @@ final class Bar: NSVisualEffectView {
             }
         }.store(in: &subs)
 
-        main.zoom.dropFirst().sink { zoom in
+        main.zoom.dropFirst().sink { [weak self] zoom in
             if zoom {
                 separator.isHidden = false
                 back.isHidden = false
                 export.isHidden = false
             } else {
                 selected.isHidden = false
-                delete.isHidden = false
+                delete.isHidden = self?.main.grid.selection == false
             }
             NSAnimationContext.runAnimationGroup ({
                 $0.duration = 0.3
                 $0.allowsImplicitAnimation = true
                 selected.alphaValue = zoom ? 0 : 1
+                delete.alphaValue = zoom ? 0 : 1
                 separator.alphaValue = zoom ? 1 : 0
                 back.alphaValue = zoom ? 1 : 0
                 export.alphaValue = zoom ? 1 : 0
@@ -181,14 +181,15 @@ final class Bar: NSVisualEffectView {
                     separator.isHidden = true
                     back.isHidden = true
                     export.isHidden = true
+                    delete.isHidden = self?.main.grid.selection == false
                 }
             }
         }.store(in: &subs)
 
-        main.grid.selected.dropFirst().debounce(for: .seconds(0.5), scheduler: DispatchQueue.main).sink {
+        main.grid.selected.dropFirst().debounce(for: .seconds(0.5), scheduler: DispatchQueue.main).sink { [weak self] in
             let count = $0.filter { $0 }.count
             selected.stringValue = count == 0 ? "" : "\(count) selected"
-            delete.alphaValue = count == 0 ? 0 : 1
+            delete.isHidden = count == 0 || self?.main.zoom.value == true
         }.store(in: &subs)
     }
     
