@@ -12,7 +12,7 @@ final class Coverflow: NSScrollView {
     
     private weak var main: Main!
     private var subs = Set<AnyCancellable>()
-    private var queue = Set([Cell(), .init(), .init()])
+    private var queue = Set<Cell>()
     private var active = Set<Cell>()
     
     required init?(coder: NSCoder) { nil }
@@ -33,6 +33,9 @@ final class Coverflow: NSScrollView {
         }.store(in: &subs)
         
         main.items.dropFirst().receive(on: DispatchQueue.main).sink { [weak self] _ in
+            content.layer!.sublayers?.forEach { $0.removeFromSuperlayer() }
+            self?.queue = [.init(), .init(), .init()]
+            self?.active = []
             self?.refresh()
         }.store(in: &subs)
         
@@ -96,11 +99,11 @@ final class Coverflow: NSScrollView {
         }
     }
     
-    private var current: [Int] {
-        [contentView.bounds.midX - frame.width, contentView.bounds.midX, contentView.bounds.midX + frame.width].compactMap {
+    private var current: Set<Int> {
+        .init([contentView.bounds.midX - frame.width, contentView.bounds.midX, contentView.bounds.midX + frame.width].compactMap {
             {
                 $0 >= 0 && $0 < main.items.value.count ? $0 : nil
             } (Int($0 / frame.width))
-        }
+        })
     }
 }
