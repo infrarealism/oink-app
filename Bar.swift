@@ -30,6 +30,7 @@ final class Bar: NSVisualEffectView {
         
         let back = Control.Button(icon: "back", color: .labelColor)
         back.alphaValue = 0
+        back.isHidden = true
         back.target = self
         back.action = #selector(self.back)
         addSubview(back)
@@ -61,6 +62,7 @@ final class Bar: NSVisualEffectView {
         delete.target = main
         delete.action = #selector(main.delete)
         delete.isHidden = true
+        delete.alphaValue = 0
         addSubview(delete)
         
         let image = Label(.systemFont(ofSize: 16, weight: .medium))
@@ -79,6 +81,7 @@ final class Bar: NSVisualEffectView {
         export.target = main
         export.action = #selector(main.export)
         export.alphaValue = 0
+        export.isHidden = true
         addSubview(export)
         
         widthAnchor.constraint(equalToConstant: 220).isActive = true
@@ -153,21 +156,37 @@ final class Bar: NSVisualEffectView {
         }.store(in: &subs)
         
         main.zoom.dropFirst().sink { zoom in
-            NSAnimationContext.runAnimationGroup {
+            if zoom {
+                separator.isHidden = false
+                back.isHidden = false
+                export.isHidden = false
+            } else {
+                selected.isHidden = false
+                delete.isHidden = false
+            }
+            NSAnimationContext.runAnimationGroup ({
                 $0.duration = 0.3
                 $0.allowsImplicitAnimation = true
                 selected.alphaValue = zoom ? 0 : 1
-                delete.alphaValue = zoom ? 0 : 1
                 separator.alphaValue = zoom ? 1 : 0
                 back.alphaValue = zoom ? 1 : 0
                 export.alphaValue = zoom ? 1 : 0
+            }) {
+                if zoom {
+                    selected.isHidden = true
+                    delete.isHidden = true
+                } else {
+                    separator.isHidden = true
+                    back.isHidden = true
+                    export.isHidden = true
+                }
             }
         }.store(in: &subs)
         
         main.grid.selected.dropFirst().debounce(for: .seconds(0.5), scheduler: DispatchQueue.main).sink {
             let count = $0.filter { $0 }.count
             selected.stringValue = count == 0 ? "" : "\(count) selected"
-            delete.isHidden = count == 0
+            delete.alphaValue = count == 0 ? 0 : 1
         }.store(in: &subs)
     }
     
