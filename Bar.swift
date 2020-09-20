@@ -134,15 +134,17 @@ final class Bar: NSVisualEffectView {
             items.layer!.add(transition, forKey: "transition")
             items.stringValue = count.string(from: .init(value: $0.count))! + " images\n" + bytes.string(from: .init(value: .init($0.reduce(0) { $0 + $1.bytes }), unit: .bytes))
         }.store(in: &subs)
-        
-        main.index.dropFirst().debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink {
+
+        main.index.dropFirst().debounce(for: .seconds(0.3), scheduler: DispatchQueue.main).sink { [weak self] in
             var changed = true
             if let index = $0 {
-                let item = main.items.value[index]
-                changed = item.url.lastPathComponent != image.stringValue
-                image.stringValue = item.url.lastPathComponent
-                specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
-                date.stringValue = format.string(from: item.date)
+                self?.main.map {
+                    let item = $0.items.value[index]
+                    changed = item.url.lastPathComponent != image.stringValue
+                    image.stringValue = item.url.lastPathComponent
+                    specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
+                    date.stringValue = format.string(from: item.date)
+                }
             } else {
                 image.stringValue = ""
                 specs.stringValue = ""
@@ -154,7 +156,7 @@ final class Bar: NSVisualEffectView {
                 date.layer!.add(transition, forKey: "transition")
             }
         }.store(in: &subs)
-        
+
         main.zoom.dropFirst().sink { zoom in
             if zoom {
                 separator.isHidden = false
@@ -182,7 +184,7 @@ final class Bar: NSVisualEffectView {
                 }
             }
         }.store(in: &subs)
-        
+
         main.grid.selected.dropFirst().debounce(for: .seconds(0.5), scheduler: DispatchQueue.main).sink {
             let count = $0.filter { $0 }.count
             selected.stringValue = count == 0 ? "" : "\(count) selected"
