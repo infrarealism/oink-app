@@ -25,6 +25,7 @@ final class Coverflow: NSScrollView {
         documentView = content
         hasHorizontalScroller = true
         contentView.postsBoundsChangedNotifications = true
+        drawsBackground = false
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
             self?.refresh()

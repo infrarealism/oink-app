@@ -35,6 +35,7 @@ final class Grid: NSScrollView {
         documentView = content
         hasVerticalScroller = true
         contentView.postsBoundsChangedNotifications = true
+        backgroundColor = .black
         
         NotificationCenter.default.publisher(for: NSView.boundsDidChangeNotification, object: contentView).sink { [weak self] _ in
             self?.refresh()
