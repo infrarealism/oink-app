@@ -7,6 +7,7 @@ final class Main: NSView {
     let index = CurrentValueSubject<Int?, Never>(nil)
     let items = CurrentValueSubject<[Photo], Never>([])
     let url: URL
+    private weak var bar: Bar!
     private var subs = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) { nil }
@@ -25,6 +26,7 @@ final class Main: NSView {
         
         let bar = Bar(main: self)
         addSubview(bar)
+        self.bar = bar
         
         bar.topAnchor.constraint(equalTo: topAnchor).isActive = true
         bar.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -55,6 +57,8 @@ final class Main: NSView {
                 grid.isHidden = false
             }
         }.store(in: &subs)
+        
+        (NSApp.mainMenu as! Menu).main = self
     }
     
     deinit {
@@ -84,6 +88,28 @@ final class Main: NSView {
     @objc func export(_ button: Bar.Item) {
         index.value.map {
             Export(item: items.value[$0]).show(relativeTo: button.bounds, of: button, preferredEdge: .maxX)
+        }
+    }
+    
+    @objc func toggle() {
+        index.value.map(grid.toggle)
+        bar.updateToggle()
+    }
+    
+    @objc func back() {
+        index.value = nil
+        zoom.value = false
+    }
+    
+    @objc func previous() {
+        index.value.map {
+            index.value = max(0, $0 - 1)
+        }
+    }
+    
+    @objc func next() {
+        index.value.map {
+            index.value = min(items.value.count - 1, $0 + 1)
         }
     }
 }

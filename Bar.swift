@@ -2,6 +2,7 @@ import AppKit
 import Combine
 
 final class Bar: NSVisualEffectView {
+    private(set) weak var toggle: NSSwitch!
     private weak var main: Main!
     private var subs = Set<AnyCancellable>()
     
@@ -31,8 +32,8 @@ final class Bar: NSVisualEffectView {
         let back = Control.Button(icon: "back", color: .labelColor)
         back.alphaValue = 0
         back.isHidden = true
-        back.target = self
-        back.action = #selector(self.back)
+        back.target = main
+        back.action = #selector(main.back)
         addSubview(back)
         
         let folder = Label(.systemFont(ofSize: 16, weight: .medium))
@@ -89,11 +90,12 @@ final class Bar: NSVisualEffectView {
         addSubview(toggleTitle)
         
         let toggle = NSSwitch()
-        toggle.target = self
-        toggle.action = #selector(self.toggle)
+        toggle.target = main
+        toggle.action = #selector(main.toggle)
         toggle.translatesAutoresizingMaskIntoConstraints = false
         toggle.isHidden = true
         addSubview(toggle)
+        self.toggle = toggle
         
         widthAnchor.constraint(equalToConstant: 220).isActive = true
         
@@ -161,7 +163,7 @@ final class Bar: NSVisualEffectView {
                     image.stringValue = item.url.lastPathComponent
                     specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
                     date.stringValue = format.string(from: item.date)
-                    toggle.state = self?.main.grid.selected.value[index] == true ? .on : .off
+                    self?.updateToggle()
                 }
             } else {
                 image.stringValue = ""
@@ -218,12 +220,9 @@ final class Bar: NSVisualEffectView {
         }.store(in: &subs)
     }
     
-    @objc private func back() {
-        main.index.value = nil
-        main.zoom.value = false
-    }
-    
-    @objc private func toggle(_ toggle: NSSwitch) {
-        main.index.value.map(main.grid.toggle)
+    func updateToggle() {
+        main.index.value.map {
+            toggle.state = main.grid.selected.value[$0] ? .on : .off
+        }
     }
 }

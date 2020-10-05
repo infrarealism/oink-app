@@ -1,10 +1,30 @@
 import AppKit
+import Combine
 
 final class Menu: NSMenu {
+    weak var main: Main? {
+        didSet {
+            sub = main?.zoom.dropFirst().sink { [weak self] in
+                guard let self = self else { return }
+                if $0 {
+                    self.items = [self.app, self.photo, self.edit, self.window, self.help]
+                } else {
+                    self.items = self.def
+                }
+            }
+        }
+    }
+    
+    private var sub: AnyCancellable?
+    
     required init(coder: NSCoder) { super.init(coder: coder) }
     init() {
         super.init(title: "")
-        items = [app, edit, window, help]
+        items = def
+    }
+    
+    private var def: [NSMenuItem] {
+        [app, edit, window, help]
     }
 
     private var app: NSMenuItem {
@@ -19,6 +39,31 @@ final class Menu: NSMenu {
         .init(title: "Show all", action: #selector(NSApplication.unhideAllApplications), keyEquivalent: ""),
         .separator(),
         .init(title: "Quit", action: #selector(NSApplication.terminate), keyEquivalent: "q")])
+    }
+    
+    private var photo: NSMenuItem {
+        menu("Photo", items: [
+        {
+            $0.keyEquivalentModifierMask = []
+            $0.target = main
+            return $0
+        } (NSMenuItem(title: "Close", action: #selector(main?.back), keyEquivalent: "\r")),
+        {
+            $0.keyEquivalentModifierMask = []
+            $0.target = main
+            return $0
+        } (NSMenuItem(title: "Select", action: #selector(main?.toggle), keyEquivalent: " ")),
+        .separator(),
+        {
+            $0.keyEquivalentModifierMask = []
+            $0.target = main
+            return $0
+        } (NSMenuItem(title: "Previous", action: #selector(main?.previous), keyEquivalent: .init(Character(UnicodeScalar(NSLeftArrowFunctionKey)!)))),
+        {
+            $0.keyEquivalentModifierMask = []
+            $0.target = main
+            return $0
+        } (NSMenuItem(title: "Next", action: #selector(main?.next), keyEquivalent: .init(Character(UnicodeScalar(NSRightArrowFunctionKey)!))))])
     }
     
     private var edit: NSMenuItem {
