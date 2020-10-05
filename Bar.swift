@@ -83,6 +83,16 @@ final class Bar: NSVisualEffectView {
         export.isHidden = true
         addSubview(export)
         
+        let toggleTitle = Label(.systemFont(ofSize: 14, weight: .regular))
+        toggleTitle.stringValue = "Selected"
+        toggleTitle.isHidden = true
+        addSubview(toggleTitle)
+        
+        let toggle = NSSwitch()
+        toggle.translatesAutoresizingMaskIntoConstraints = false
+        toggle.isHidden = true
+        addSubview(toggle)
+        
         widthAnchor.constraint(equalToConstant: 220).isActive = true
         
         back.rightAnchor.constraint(equalTo: rightAnchor, constant: -10).isActive = true
@@ -129,6 +139,12 @@ final class Bar: NSVisualEffectView {
         export.leftAnchor.constraint(equalTo: leftAnchor, constant: 40).isActive = true
         export.rightAnchor.constraint(equalTo: rightAnchor, constant: -40).isActive = true
         
+        toggleTitle.leftAnchor.constraint(equalTo: leftAnchor, constant: 20).isActive = true
+        toggleTitle.centerYAnchor.constraint(equalTo: toggle.centerYAnchor).isActive = true
+        
+        toggle.leftAnchor.constraint(equalTo: toggleTitle.rightAnchor, constant: 10).isActive = true
+        toggle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20).isActive = true
+        
         main.items.dropFirst().receive(on: DispatchQueue.main).sink {
             items.layer!.add(transition, forKey: "transition")
             items.stringValue = count.string(from: .init(value: $0.count))! + " images\n" + bytes.string(from: .init(value: .init($0.reduce(0) { $0 + $1.bytes }), unit: .bytes))
@@ -143,6 +159,7 @@ final class Bar: NSVisualEffectView {
                     image.stringValue = item.url.lastPathComponent
                     specs.stringValue = "\(Int(item.size.width))×\(Int(item.size.height))\n" + bytes.string(from: .init(value: .init(item.bytes), unit: .bytes)) + (item.iso == nil ? "" : "\nISO \(item.iso!)")
                     date.stringValue = format.string(from: item.date)
+                    toggle.state = self?.main.grid.selected.value[index] == true ? .on : .off
                 }
             } else {
                 image.stringValue = ""
@@ -161,6 +178,8 @@ final class Bar: NSVisualEffectView {
                 separator.isHidden = false
                 back.isHidden = false
                 export.isHidden = false
+                toggleTitle.isHidden = false
+                toggle.isHidden = false
             } else {
                 selected.isHidden = false
                 delete.isHidden = self?.main.grid.selection == false
@@ -173,6 +192,8 @@ final class Bar: NSVisualEffectView {
                 separator.alphaValue = zoom ? 1 : 0
                 back.alphaValue = zoom ? 1 : 0
                 export.alphaValue = zoom ? 1 : 0
+                toggleTitle.alphaValue = zoom ? 1 : 0
+                toggle.alphaValue = zoom ? 1 : 0
             }) {
                 if zoom {
                     selected.isHidden = true
@@ -181,6 +202,8 @@ final class Bar: NSVisualEffectView {
                     separator.isHidden = true
                     back.isHidden = true
                     export.isHidden = true
+                    toggleTitle.isHidden = true
+                    toggle.isHidden = true
                     delete.isHidden = self?.main.grid.selection == false
                 }
             }
