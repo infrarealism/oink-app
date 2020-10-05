@@ -8,6 +8,7 @@ final class Main: NSView {
     let items = CurrentValueSubject<[Photo], Never>([])
     let url: URL
     private weak var bar: Bar!
+    private weak var coverflow: Coverflow!
     private var subs = Set<AnyCancellable>()
     
     required init?(coder: NSCoder) { nil }
@@ -23,6 +24,7 @@ final class Main: NSView {
         let coverflow = Coverflow(main: self)
         coverflow.isHidden = true
         addSubview(coverflow)
+        self.coverflow = coverflow
         
         let bar = Bar(main: self)
         addSubview(bar)
@@ -104,12 +106,14 @@ final class Main: NSView {
     @objc func previous() {
         index.value.map {
             index.value = max(0, $0 - 1)
+            coverflow.animateCenter()
         }
     }
     
     @objc func next() {
         index.value.map {
             index.value = min(items.value.count - 1, $0 + 1)
+            coverflow.animateCenter()
         }
     }
 }

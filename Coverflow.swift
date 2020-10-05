@@ -50,13 +50,17 @@ final class Coverflow: NSScrollView {
                 return
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                NSAnimationContext.runAnimationGroup {
-                    $0.duration = 0.3
-                    $0.allowsImplicitAnimation = true
-                    self?.center()
-                }
+                self?.animateCenter()
             }
         }.store(in: &subs)
+    }
+    
+    func animateCenter() {
+        NSAnimationContext.runAnimationGroup {
+            $0.duration = 0.3
+            $0.allowsImplicitAnimation = true
+            center()
+        }
     }
     
     private func center() {

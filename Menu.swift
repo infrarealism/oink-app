@@ -47,7 +47,7 @@ final class Menu: NSMenu {
             $0.keyEquivalentModifierMask = []
             $0.target = main
             return $0
-        } (NSMenuItem(title: "Close", action: #selector(main?.back), keyEquivalent: "\r")),
+        } (NSMenuItem(title: "Dismiss", action: #selector(main?.back), keyEquivalent: "\r")),
         {
             $0.keyEquivalentModifierMask = []
             $0.target = main
