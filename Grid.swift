@@ -87,6 +87,11 @@ final class Grid: NSScrollView {
         }
     }
     
+    func toggle(_ index: Int) {
+        selected.value[index].toggle()
+        active.first { $0.index == index }?.highlighted = selected.value[index]
+    }
+    
     private func refresh() {
         reposition()
         render()

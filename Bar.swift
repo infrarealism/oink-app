@@ -89,6 +89,8 @@ final class Bar: NSVisualEffectView {
         addSubview(toggleTitle)
         
         let toggle = NSSwitch()
+        toggle.target = self
+        toggle.action = #selector(self.toggle)
         toggle.translatesAutoresizingMaskIntoConstraints = false
         toggle.isHidden = true
         addSubview(toggle)
@@ -219,5 +221,9 @@ final class Bar: NSVisualEffectView {
     @objc private func back() {
         main.index.value = nil
         main.zoom.value = false
+    }
+    
+    @objc private func toggle(_ toggle: NSSwitch) {
+        main.index.value.map(main.grid.toggle)
     }
 }
